@@ -16,24 +16,31 @@ class Plot:
         # Create a figure and axes
         fig, ax = plt.subplots(figsize=(10,10))
         
-        # Set aspect ration to keep cells square
+        # Set aspect ratio to keep cells square
         ax.set_aspect("equal")
         
         # Set the border color to white
-        fig.patch.set_edgecolor('white')
+        fig.patch.set_edgecolor("white")
         fig.patch.set_linewidth(0)
         
         # Hide axis ticks
         ax.set_xticks([])
         ax.set_yticks([])
         
-        # Show inner border (maze outer walls)
-        ax.set_frame_on(True)
-        plt.setp(ax.spines.values(), linewidth=self.edgewidth)
+        # Hide axes
+        ax.spines[["right", "top", "bottom", "left"]].set_visible(False)
         
-        # Set Viewport
-        plt.xlim(0, self.width)
-        plt.ylim(0, self.height)
+        # Set entry and exit (top left, bottom right)
+        self.cells[0][self.height - 1].left = 0
+        self.cells[self.width - 1][0].right = 0
+        
+        # Draw entry and exit arrows
+        ax.arrow(-1, self.height - 0.5, .4, 0, fc="green", ec="green", head_width=0.3, head_length=0.3)
+        ax.arrow(self.width, 0.5, 0.4, 0, fc="red", ec="red", head_width=0.3, head_length=0.3)
+        
+        # Set viewport with padding to allow for uniform borders
+        plt.xlim(-1, self.width + 1)
+        plt.ylim(-1, self.height + 1)
 
         # Fill grid based on cells
         for x in range(self.width):
@@ -90,17 +97,9 @@ class Plot:
         return [(verts[1][0], verts[1][1]), (verts[2][0], verts[2][1])]
         
     def get_cell(self, cell, x, y):
-        color = "red"
-        if x == 0 and y == self.height - 1:
-            color = "green"
-        elif x == self.width - 1 and y == 0:
-            color = "red"
-        elif cell.visited:
+        color = "black"
+        if cell.visited:
             color = "white"
             
         # Get our cell and set, position, size and color (no border)    
-        return patches.Rectangle((x, y), self.cellSize, self.cellSize, linewidth=0, facecolor=color, edgecolor="black")
-    
-    # Draw entry and exit arrows
-    # ax.arrow(0, 1, .4, 0, fc='green', ec='green', head_width=0.3, head_length=0.3)
-    # ax.arrow(maze.shape[1] - 1, maze.shape[0]  - 2, 0.4, 0, fc='blue', ec='blue', head_width=0.3, head_length=0.3)
+        return patches.Rectangle((x, y), self.cellSize, self.cellSize, linewidth=0, facecolor=color, edgecolor="black")    
