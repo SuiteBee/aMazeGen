@@ -11,6 +11,7 @@ class Animated:
         self.visited = []
         self.unvisited = []
         self.path = []
+        self.plotted = []
         
         # Possible Directions (Up), (Down), (Left), (Right)
         # Directions as x,y coordinates
@@ -51,8 +52,10 @@ class Animated:
             
             for i in range(len(self.visited)):
                 step = self.visited[i]
-                self.plot.draw_single_border(self.cells[step[0]][step[1]], step[0], step[1])
-            
+                if step not in self.plotted:
+                    self.plotted.append(step)
+                    self.plot.draw_single_border(self.cells[step[0]][step[1]], step[0], step[1])
+                    
         self.plot.show()
 
     def add_cell(self, address):
