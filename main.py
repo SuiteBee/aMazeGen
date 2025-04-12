@@ -1,5 +1,6 @@
 from Draw.plot import Plot
 from Maze.maze import Maze
+from Maze.animated import Animated
 from UI.interface import Interface
 
 # Instantiate interface and make selections
@@ -9,8 +10,11 @@ options.show()
 # Pause before continuing
 input("Press any key to generate and solve...")
 
-maze = Maze(options.width, options.height)
+maze = Animated(options.width, options.height)
 cells = maze.generate_wilsons()
 
-mazePlot = Plot(cells)
-mazePlot.draw_grid()
+#maze = Maze(options.width, options.height)
+#cells = maze.generate_wilsons()
+
+#mazePlot = Plot(cells)
+#mazePlot.draw()
