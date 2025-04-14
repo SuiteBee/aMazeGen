@@ -1,4 +1,4 @@
-from Maze.maze import Maze
+#from Maze.iGenerate import IGenerate
 from Maze.Generate.wilsons import Wilsons
 from UI.userInterface import UserInterface
 

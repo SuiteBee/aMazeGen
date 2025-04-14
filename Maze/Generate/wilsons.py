@@ -1,11 +1,12 @@
-from Maze.maze import Maze
+from Maze.iGenerate import IGenerate
+from Maze.cell import Cell
 import random
 
-class Wilsons(Maze):
+class Wilsons(IGenerate):
     def __init__(self, width, height, isAnimated):
         super().__init__(width, height, isAnimated)
         
-    def generate(self):
+    def generate(self) -> list[list[Cell]]:
         
         self.plot.draw_start()
                 
@@ -30,6 +31,8 @@ class Wilsons(Maze):
             self.__cut_path()
                     
         self.plot.draw_end()
+        
+        return self.cells
 
     def __add_cell(self, address):
         if address not in self.visited:
@@ -38,7 +41,6 @@ class Wilsons(Maze):
         if address in self.unvisited:
             self.unvisited.remove(address)
             
-        self.cells[address[0]][address[1]].visited = True
         self.plot.set_color(address[0], address[1], "white")
 
     # Walk from random point to point in maze
@@ -116,8 +118,8 @@ class Wilsons(Maze):
             if len(self.path) > 0:
                 tail = previous
                 
-    def __get_direction(self, tail, previous):       
-        direction = tail[0] - previous[0], tail[1] - previous[1]
+    def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> str:       
+        direction = first[0] - second[0], first[1] - second[1]
         index = self.directions.index(direction)
 
         if index == 0:

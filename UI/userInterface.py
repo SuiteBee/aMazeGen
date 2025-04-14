@@ -33,7 +33,7 @@ solveAlgorithms = [
 ]
 
 class UserInterface:
-    def __init__(self):
+    def __init__(self) -> None:
         self.width = 0
         self.height = 0
         
@@ -41,8 +41,10 @@ class UserInterface:
         self.mSolve = 0
         
     # Main UI loop
-    def show(self):
-
+    def show(self) -> None:
+        """Main UI loop to set generation/solution options
+        """
+        
         self.__reset()
         self.__instructions()
         
@@ -62,25 +64,37 @@ class UserInterface:
         self.__reset()
         self.__show_selections()
         
-    def __reset(self):
+    def __reset(self) -> None:
+        """Clear user console and re-print title
+        """
+        
         self.__clear_console()
         print(title)
         print()
         
-    def __instructions(self):
+    def __instructions(self) -> None:
+        """Print contents of instruction array
+        """
+        
         for s in instructions:
             print(s)
         print()
         
         input("Press any key to continue...")
         
-    def __show_selections(self):
+    def __show_selections(self) -> None:
+        """Print current options selected
+        """
+        
         print(f"Dimensions: {self.width}x{self.height}")
         print(f"Generating: {self.__generate_name()}") 
         print(f"Solving: {self.__solution_name()}")
         print()
         
-    def __get_width(self):
+    def __get_width(self) -> int:
+        """Gather user input for maze width
+        """
+        
         while True:
             tmpWidth = input("Enter a width for the generated maze: ")
             try:
@@ -93,7 +107,10 @@ class UserInterface:
             else: 
                 print("Keep dimensions reasonable: valid input 10-100")
 
-    def __get_height(self):
+    def __get_height(self) -> int:
+        """Gather user input for maze height
+        """
+        
         while True:
             tmpHeight = input("Enter a height for the generated maze: ")
             try:
@@ -106,7 +123,10 @@ class UserInterface:
             else: 
                 print("Keep dimensions reasonable: valid input 10-100")
 
-    def __get_gen(self):
+    def __get_gen(self) -> int:
+        """Print contents of generate algorithm array and gather user input for selection
+        """
+        
         for a in generateAlgorithms:
             print(a)       
         print()
@@ -123,7 +143,10 @@ class UserInterface:
             else:
                 print("Choose one of the available options: valid input 1")
             
-    def __get_solve(self):
+    def __get_solve(self) -> int:
+        """Print contents of solution algorithm array and gather user input for selection
+        """
+        
         for a in solveAlgorithms:
             print(a)
         
@@ -141,16 +164,28 @@ class UserInterface:
             else:
                 print("Choose one of the available options: valid input 1-3")
             
-    def __selection_required(self):
+    def __selection_required(self) -> bool:
+        """Determines if all required inputs have been collected
+        """
+        
         return self.width == 0 or self.height == 0 or self.mGen == 0 or self.mSolve == 0
         
-    def __generate_name(self):
+    def __generate_name(self) -> str:
+        """Get name of selected generation algorithm
+        """
+        
         return generateAlgorithms[self.mGen][4:]
     
-    def __solution_name(self):
+    def __solution_name(self) -> str:
+        """Get name of selected solution algorithm
+        """
+        
         return solveAlgorithms[self.mSolve][4:]
     
-    def __clear_console(self):
+    def __clear_console(self) -> None:
+        """Clears all contents of console output
+        """
+        
         if sys.platform in ("linux", "darwin"):
             os.system("clear")
         elif sys.platform == "win32":

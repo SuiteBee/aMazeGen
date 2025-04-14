@@ -2,17 +2,17 @@ from Maze.cell import Cell
 from Draw.plot import Plot
 from abc import ABC, abstractmethod
 
-class Maze(ABC):
-    def __init__(self, width, height, isAnimated):
-        # Input
-        self.width = width
-        self.height = height
+class ISolvable(ABC):
+    def __init__(self, maze: list[Cell][Cell], isAnimated: bool):
+        """Maze is a 2d list of Cell
+        isAnimated will introduce a timestep to visualize the solution of the maze
+        """
+        self.maze = maze
         self.isAnimated = isAnimated
         
         # Maze resides in cells
-        self.cells = [[Cell() for y in range(height)] for x in range(width)]
         self.visited = []
-        self.unvisited = self.__fill_unvisited()
+        self.unvisited = []
         self.path = []
         
         # Possible Directions (Up), (Down), (Left), (Right)
@@ -22,18 +22,12 @@ class Maze(ABC):
         # The visualized maze (animated will include a pause)
         self.plot = Plot(self.cells, isAnimated)
         
+    
     @abstractmethod
-    def generate():
+    def solve() -> list[Cell]: 
+        """Utilize the algorithm instance create and return a 2d list of Cell with a given width x height
+        
+        Return list of cells as solution path
+        """
         pass
-    
-    #@abstractmethod
-    #def solve():
-    #    pass
-    
-    def __fill_unvisited(self):
-        arr = []
-        for x in range(self.width):
-            for y in range(self.height):
-                arr.append((x,y))
-        return arr
     
