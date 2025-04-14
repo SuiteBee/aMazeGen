@@ -32,7 +32,7 @@ solveAlgorithms = [
     "3.) A* or Tremaux"
 ]
 
-class Interface:
+class UserInterface:
     def __init__(self):
         self.width = 0
         self.height = 0

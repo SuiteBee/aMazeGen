@@ -1,20 +1,17 @@
-from Draw.plot import Plot
 from Maze.maze import Maze
-from Maze.animated import Animated
-from UI.interface import Interface
+from Maze.Generate.wilsons import Wilsons
+from UI.userInterface import UserInterface
 
 # Instantiate interface and make selections
-options = Interface()
+options = UserInterface()
 options.show()
 
 # Pause before continuing
 input("Press any key to generate and solve...")
 
-maze = Animated(options.width, options.height)
-cells = maze.generate_wilsons()
+maze = None
 
-#maze = Maze(options.width, options.height)
-#cells = maze.generate_wilsons()
+if options.mGen == 1:
+    maze = Wilsons(options.width, options.height, False)
 
-#mazePlot = Plot(cells)
-#mazePlot.draw()
+maze.generate()
