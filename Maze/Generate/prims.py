@@ -66,12 +66,17 @@ class Prims(IGenerate):
         return neighbors
     
     def __get_visited_neighbor(self, address: tuple[int,int]) -> tuple[int,int]:
-        """Return neighboring cell that is part of the maze
+        """Return random neighboring cell that is part of the maze
         """
         
         # Get neighbors of cell at address
         neighbors = self.__get_neighbors(address)
+        
+        neighbors_in_maze = []
         for cell in neighbors:
-            # Only one should be visited
+            # Valid cells are in maze
             if cell in self.visited:
-                return cell
+                neighbors_in_maze.append(cell)
+                
+        # Pick a valid cell at random
+        return random.choice(neighbors_in_maze)
