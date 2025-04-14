@@ -5,7 +5,7 @@ from Draw.plotCell import PlotCell
 class Plot:
     def __init__(self, width, height, isAnimated):
         self.isAnimated = isAnimated 
-        self.timeStep = 0.05
+        self.timeStep = 0.01
         
         self.width = width
         self.height = height

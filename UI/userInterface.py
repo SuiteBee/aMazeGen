@@ -22,7 +22,7 @@ generateAlgorithms = [
     "Chose one of the following algorithms",
     "1.) Wilsons",
     "2.) Prims",
-    "3.) Kruskal or Aldous-Broder"
+    "3.) Aldous-Broder"
 ]
 
 solveAlgorithms = [

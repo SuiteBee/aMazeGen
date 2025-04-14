@@ -6,13 +6,16 @@ class Wilsons(IGenerate):
     def __init__(self, width, height, isAnimated):
         super().__init__(width, height, isAnimated)
         
+        # For wilsons unvisited is initialized with all cells
+        self.unvisited = self._fill_unvisited()
+        
     def generate(self) -> list[list[Cell]]:
         
         self.plot.draw_start()
                 
         # Add first point to the maze
-        start = random.choice(self.unvisited)
-        self.__add_cell(start)
+        start = (random.randrange(self.width - 1), random.randrange(self.height - 1))
+        self._add_cell(start)
         
         # Loop until all cells are visited
         while len(self.unvisited) > 0:     
@@ -25,31 +28,27 @@ class Wilsons(IGenerate):
             # Mark all cells in our path as visited (i.e. add to maze)
             for i in range(len(self.path)):
                 step = self.path[i]
-                self.__add_cell(step)
+                self._add_cell(step)
             
-            # Cut a path in reverse (set borders)
-            self.__cut_path()
+            # Walk our path in reverse (set borders)
+            self.__walk_back()
                     
         self.plot.draw_end()
         
         return self.cells
 
-    def __add_cell(self, address):
-        if address not in self.visited:
-            self.visited.append(address)
-            
-        if address in self.unvisited:
-            self.unvisited.remove(address)
-            
-        self.plot.set_color(address[0], address[1], "white")
-
     # Walk from random point to point in maze
-    def __take_walk(self, src):
+    def __take_walk(self, src: tuple[int,int]) -> None:
+        """Randomly move in any direction from src coordinates until we hit a point in the maze
+        
+        If we run into this path we back track until that point and continue
+        """
+        
         # Add our start to the path
         self.path.append(src)
         
         # Get next cell to add to path
-        current = self.__get_next_cell(src)
+        current = self.__take_step(src)
         
         # Mark our travel path red
         self.plot.set_color(current[0], current[1], "red")
@@ -70,68 +69,17 @@ class Wilsons(IGenerate):
                 self.plot.set_color(current[0], current[1], "red")
                 
             # Get next cell to add to path
-            current = self.__get_next_cell(current)
+            current = self.__take_step(current)
             
         # Add our target to process wall removal
         self.path.append(current)
-    
-    # Set walls relative to path taken in reverse
-    # i.e. open wall in path of travel
-    def __cut_path(self):
-        tail = self.path.pop()
         
-        while len(self.path) > 0:
-            previous = self.path.pop()  
+    def __take_step(self, src: tuple[int,int]) -> tuple[int,int]:
+        """Pick a random direction to walk in, if the coordinates are within maze bounds return those coordinates
         
-            # Get the direction we came from
-            dir = self.__get_direction(tail, previous)
-
-            # Since we are traveling in reverse we can interpret this is as coming from [dir]
-            if dir == 'down':
-                # Remove walls from maze
-                self.cells[tail[0]][tail[1]].top = 0
-                self.cells[previous[0]][previous[1]].bottom = 0
-                
-                # Remove walls from plot
-                self.plot.set_border(tail[0], tail[1], "top", False)
-                self.plot.set_border(previous[0], previous[1], "bottom", False)
-            elif dir == 'up':
-                self.cells[tail[0]][tail[1]].bottom = 0
-                self.cells[previous[0]][previous[1]].top = 0
-                
-                self.plot.set_border(tail[0], tail[1], "bottom", False)
-                self.plot.set_border(previous[0], previous[1], "top", False)
-            elif dir == 'left':
-                self.cells[tail[0]][tail[1]].right = 0
-                self.cells[previous[0]][previous[1]].left = 0
-                
-                self.plot.set_border(tail[0], tail[1], "right", False)
-                self.plot.set_border(previous[0], previous[1], "left", False)
-            elif dir == 'right':
-                self.cells[tail[0]][tail[1]].left = 0
-                self.cells[previous[0]][previous[1]].right = 0
-                
-                self.plot.set_border(tail[0], tail[1], "left", False)
-                self.plot.set_border(previous[0], previous[1], "right", False)
-            
-            # Set tail to be the cell we just processed for next iteration
-            if len(self.path) > 0:
-                tail = previous
-                
-    def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> str:       
-        direction = first[0] - second[0], first[1] - second[1]
-        index = self.directions.index(direction)
-
-        if index == 0:
-            return 'up'
-        elif index == 1:
-            return 'down'
-        elif index == 2:
-            return 'left'
-        elif index == 3:
-            return 'right'
-         
-    def __get_next_cell(self, src):
+        Call is recursive until we find a valid direction to go
+        """
+        
         travel = random.choice(self.directions)
         
         nextCellX = src[0] + travel[0]
@@ -141,4 +89,21 @@ class Wilsons(IGenerate):
         if(nextCellX >= 0 and nextCellX < self.width and nextCellY >= 0 and nextCellY < self.height):
             return (nextCellX, nextCellY)
         else:
-            return self.__get_next_cell(src)
+            return self.__take_step(src)
+    
+    def __walk_back(self) -> None:
+        """For each cell in our random walk, cut a path between each in reverse
+        """
+        
+        tail = self.path.pop()
+        
+        while len(self.path) > 0:
+            previous = self.path.pop()
+            
+            # Set walls relative to path taken in reverse
+            # i.e. open wall in path of travel
+            self._cut_path(tail, previous)
+        
+            # Set tail to be the cell we just processed for next iteration
+            if len(self.path) > 0:
+                tail = previous

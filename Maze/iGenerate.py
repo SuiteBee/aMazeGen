@@ -14,7 +14,7 @@ class IGenerate(ABC):
         # Maze resides in cells
         self.cells = [[Cell() for y in range(height)] for x in range(width)]
         self.visited = []
-        self.unvisited = self.__fill_unvisited()
+        self.unvisited = [] 
         self.path = []
         
         # Possible Directions (Up), (Down), (Left), (Right)
@@ -32,9 +32,65 @@ class IGenerate(ABC):
         """
         pass
     
-    def __fill_unvisited(self) -> list[(int,int)]:
+    def _fill_unvisited(self) -> list[(int,int)]:
         arr = []
         for x in range(self.width):
             for y in range(self.height):
                 arr.append((x,y))
         return arr
+    
+    def _add_cell(self, address: tuple[int,int]) -> None:
+        if address not in self.visited:
+            self.visited.append(address)
+            
+        if address in self.unvisited:
+            self.unvisited.remove(address)
+        
+        # Cells added to maze are denoted as white squares    
+        self.plot.set_color(address[0], address[1], "white")
+        
+    def _cut_path(self, first, second) -> None:
+        
+            # Get the direction we came from
+            dir = self.__get_direction(first, second)
+
+           # Since we are traveling in reverse we can interpret this is as coming from [dir]
+            if dir == "down":
+                # Remove walls from maze
+                self.cells[first[0]][first[1]].top = 0
+                self.cells[second[0]][second[1]].bottom = 0
+                
+                # Remove walls from plot
+                self.plot.set_border(first[0], first[1], "top", False)
+                self.plot.set_border(second[0], second[1], "bottom", False)
+            elif dir == "up":
+                self.cells[first[0]][first[1]].bottom = 0
+                self.cells[second[0]][second[1]].top = 0
+                
+                self.plot.set_border(first[0], first[1], "bottom", False)
+                self.plot.set_border(second[0], second[1], "top", False)
+            elif dir == "left":
+                self.cells[first[0]][first[1]].right = 0
+                self.cells[second[0]][second[1]].left = 0
+                
+                self.plot.set_border(first[0], first[1], "right", False)
+                self.plot.set_border(second[0], second[1], "left", False)
+            elif dir == "right":
+                self.cells[first[0]][first[1]].left = 0
+                self.cells[second[0]][second[1]].right = 0
+                
+                self.plot.set_border(first[0], first[1], "left", False)
+                self.plot.set_border(second[0], second[1], "right", False)
+        
+    def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> str:       
+        direction = first[0] - second[0], first[1] - second[1]
+        index = self.directions.index(direction)
+
+        if index == 0:
+            return 'up'
+        elif index == 1:
+            return 'down'
+        elif index == 2:
+            return 'left'
+        elif index == 3:
+            return 'right'
