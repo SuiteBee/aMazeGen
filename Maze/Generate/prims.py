@@ -1,6 +1,7 @@
 from Maze.iGenerate import IGenerate
 from Maze.cell import Cell
 import random
+import threading
 
 class Prims(IGenerate):
     def __init__(self, width, height, isAnimated):
@@ -11,9 +12,7 @@ class Prims(IGenerate):
         self.unvisited = []
         
     def generate(self) -> list[list[Cell]]:
-        
-        self.plot.draw_start()
-                
+
         # Add first point to the maze
         start = (random.randrange(self.width - 1), random.randrange(self.height - 1))
         self._add_cell(start)
@@ -32,21 +31,22 @@ class Prims(IGenerate):
             self._add_cell(frt)
             
             self.__expand_frontier(frt)
- 
-        self.plot.draw_end()
         
         return self.cells
         
     def __expand_frontier(self, address: tuple[int,int]) -> None:
-        newFrontier = self.__get_neighbors(address)
-        for cell in newFrontier:
+        new_frontier = self.__get_neighbors(address)
+        plot_frames = []
+        
+        for cell in new_frontier:
             # Cell is not already a part of the maze or frontier
             if not cell in self.visited and not cell in self.unvisited:
                 self.unvisited.append(cell)
             
                 # Cells within the frontier are denoted as red squares
-                self.plot.set_color(cell[0], cell[1], "red")
+                plot_frames.append((cell, ("cell", "red")))
         
+        self.plot.draw_multiple(plot_frames)
         
     def __get_neighbors(self, address: tuple[int,int]) -> list[tuple[int,int]]:
         """Return a list of neighboring cell coordinates that are within the maze bounds

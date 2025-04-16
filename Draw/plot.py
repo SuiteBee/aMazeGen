@@ -1,6 +1,7 @@
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 from Maze.cell import Cell
 from Draw.plotCell import PlotCell
+import time
 
 class Plot:
     def __init__(self, width, height, isAnimated):
@@ -17,7 +18,9 @@ class Plot:
         self.graph = self.__get_graph()
         
         # Create a figure and axes
-        self.fig, self.ax = plt.subplots(figsize=(10,10))
+        self.fig = plt.figure(figsize=(10,10))
+        self.ax = self.fig.add_subplot()
+        
         self.__configure_plot()
                 
     def draw_start(self) -> None:
@@ -34,7 +37,7 @@ class Plot:
                 
                 # Draw borders
                 self.ax.add_collection(plot_cell.borders)
-                
+        
     def draw_end(self) -> None:
         """Draw entry/exit and arrows then show plot
         """
@@ -55,7 +58,7 @@ class Plot:
         
         self.graph[x][y].set_patch_color(color)
         
-        if self.isAnimated:         
+        if self.isAnimated: 
             plt.pause(self.timeStep)
         
     def set_border_cell(self, cell: Cell, x: int, y: int) -> None:
@@ -82,14 +85,10 @@ class Plot:
             active (bool): Wall enabled
         """
         
-        if direction.upper() == "BOTTOM":
-            self.graph[x][y].set_border_active(0, active)
-        elif direction.upper() == "TOP":
-            self.graph[x][y].set_border_active(1, active)
-        elif direction.upper() == "LEFT":
-            self.graph[x][y].set_border_active(2, active)
-        elif direction.upper() == "RIGHT":
-            self.graph[x][y].set_border_active(3, active)
+        self.graph[x][y].set_border(direction, active)
+        
+        if self.isAnimated: 
+            plt.pause(self.timeStep)
     
     def __get_graph(self) -> list[list[PlotCell]]:
         """Create a 2d list representation of our maze with PlotCells
@@ -105,7 +104,7 @@ class Plot:
     def __configure_plot(self) -> None:
         """Set aspect, viewport size and show/hide what we want to see in graph
         """
-        
+
         # Set aspect ratio to keep cells square
         self.ax.set_aspect("equal")
         

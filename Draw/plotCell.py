@@ -15,9 +15,23 @@ class PlotCell:
         """
         
         self.patch.set_facecolor(facecolor)
+    
+    def set_border(self, direction: str, active: bool) -> None:
+        """Set single border visibility based on direction
+        """
         
+        if direction.upper() == "BOTTOM":
+            self.set_border_active(0, active)
+        elif direction.upper() == "TOP":
+            self.set_border_active(1, active)
+        elif direction.upper() == "LEFT":
+            self.set_border_active(2, active)
+        elif direction.upper() == "RIGHT":
+            self.set_border_active(3, active)
+            
     def set_border_active(self, index: int, active: bool) -> None:
         """Set border to be visible by replacing the line collection widths array
+        
         Line collection does not allow for altering list elements directly
         """
         
