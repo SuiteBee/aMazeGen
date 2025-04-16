@@ -1,5 +1,5 @@
 from Maze.cell import Cell
-from Draw.plot import Plot
+from Draw.mplPlot import MplPlot
 from abc import ABC, abstractmethod
 
 class ISolvable(ABC):
@@ -20,7 +20,7 @@ class ISolvable(ABC):
         self.directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
         
         # The visualized maze (animated will include a pause)
-        self.plot = Plot(self.cells, isAnimated)
+        self.plot = MplPlot(self.cells, isAnimated)
         
     
     @abstractmethod

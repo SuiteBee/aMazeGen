@@ -3,10 +3,10 @@ from Maze.Generate.wilsons import Wilsons
 
 maze = None
 
-width = 50
-height = 50
+width = 30
+height = 30
 
-maze = Prims(width, height, True)
-#maze = Wilsons(width, height, True)
+maze = Prims(width, height, False)
+#maze = Wilsons(width, height, False)
 
 maze.generate()

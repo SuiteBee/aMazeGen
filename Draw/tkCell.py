@@ -1,15 +1,17 @@
 import tkinter as tk
 
-class KinterCell:
+class TkCell:
     def __init__(self, cell, top, bottom, left, right) -> None:
-        self.cellId = cell
+        """TkCells will store objectId's for the cell iteslf as well as its four borders
+        """
+        self.cell = cell
         self.top = top
         self.bottom = bottom
         self.left = left
         self.right = right
         
     def set_color(self, canvas: tk.Canvas, color):
-        canvas.itemconfig(self.cellId, fill=color)
+        canvas.itemconfig(self.cell, fill=color)
         
     def remove_border(self, canvas: tk.Canvas, border):
         if border == "top":

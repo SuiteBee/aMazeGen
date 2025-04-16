@@ -1,9 +1,8 @@
 from matplotlib import pyplot as plt
 from Maze.cell import Cell
-from Draw.plotCell import PlotCell
-import time
+from Draw.mplCell import MplCell
 
-class Plot:
+class MplPlot:
     def __init__(self, width, height, isAnimated):
         self.isAnimated = isAnimated 
         self.timeStep = 0.01
@@ -86,9 +85,6 @@ class Plot:
         """
         
         self.graph[x][y].set_border(direction, active)
-        
-        if self.isAnimated: 
-            plt.pause(self.timeStep)
     
     def __get_graph(self) -> list[list[PlotCell]]:
         """Create a 2d list representation of our maze with PlotCells

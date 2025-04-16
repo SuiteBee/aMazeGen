@@ -1,0 +1,160 @@
+import tkinter as tk
+from Draw.tkCell import TkCell
+
+class TkGrid:
+    def __init__(self, root, width, height):
+        self.width = width
+        self.height = height
+        self.aspect = width/height
+
+        # Relative window size (will adjust based on aspect)
+        self.target_width = 1000
+        self.target_height = 1000
+        
+        # Extra space at edge of canvas
+        self.canvas_padding = 80
+        self.cell_padding = 40
+        
+        # Cell size is determined by our final canvas size
+        self.cell_size = -1 
+        # Shrink edge width for large grids
+        self.edge_width = 1 if width + height > 100 else 3
+              
+        self.canvas = self.__get_canvas(root)
+        self.cells = self.__generate_grid()
+        
+    def modify(self, address: tuple[int,int], instruction: tuple[str,str]) -> None:
+        """Perform instruction operation on cell at address(x,y)
+        
+        This will color the cell face or hide a specified border
+        
+        Usage 
+            modify((x,y), ("cell", "red"))
+            modify((x,y), ("border", "top"))
+            
+        Valid border strings: top/bottom/left/right
+        """
+        x = address[0]
+        y = address[1]
+        
+        part = instruction[0]
+
+        if part == "cell":
+            color = instruction[1]
+            self.cells[x][y].set_color(self.canvas, color)
+        elif part == "border":
+            direction = instruction[1]
+            self.cells[x][y].remove_border(self.canvas, direction)
+            
+    def open(self) -> None:
+        """Draw entry/exit and arrows
+        """
+
+        # Set entry and exit (top left, bottom right)
+        self.modify((0, self.height - 1), ("border", "left"))
+        self.modify((self.width - 1, 0), ("border", "right"))
+        
+        # Draw entry arrow
+        entryX1 = self.cell_padding/4
+        entryY1 = self.cell_size/2 + self.cell_padding
+        entryX2 = self.cell_padding - self.cell_padding/4
+        entryY2 = self.cell_size/2 + self.cell_padding
+        
+        self.canvas.create_line(entryX1, entryY1, entryX2, entryY2, arrow=tk.LAST, fill="black", width=5)
+        
+        # draw exit arrow
+        exitX1 = self.canvas.winfo_reqwidth() - self.cell_padding + self.cell_padding/4
+        exitY1 = self.canvas.winfo_reqheight() - self.cell_size/2 - self.cell_padding
+        exitX2 = self.canvas.winfo_reqwidth() - self.cell_padding/4
+        exitY2 = self.canvas.winfo_reqheight() - self.cell_size/2 - self.cell_padding
+        
+        self.canvas.create_line(exitX1, exitY1, exitX2, exitY2, arrow=tk.LAST, fill="black", width=5)
+
+    def __get_canvas(self, root: tk.Tk) -> tk.Canvas:
+        """Determine canvas size based on target dimensions and aspect 
+        
+        Use our calculated canvas dimensions to get cell size and add canvas to root(TK window)
+        """
+        
+        canvas_width = -1
+        canvas_height = -1
+        
+        # Height is same or greater than width
+        if self.target_width / self.target_height >= self.aspect:
+            # Adjust width to allow only necessary amount of space
+            canvas_width = int(self.target_height * self.aspect)
+            canvas_height = self.target_height
+
+            # Divide our canvas width by number of columns to get cell size
+            # This will ensure our cells fit in the window bounds
+            self.cell_size = canvas_width / self.width 
+        # Width is greater than height
+        else:
+            canvas_width = self.target_width
+            canvas_height = int(self.target_width / self.aspect)
+
+            self.cell_size = canvas_height / self.height
+            
+        # Include some white space at the edges
+        canvas_width += self.canvas_padding
+        canvas_height += self.canvas_padding
+
+        # Instantiate our canvas object with calculated dimensions and white background
+        tmpCanvas = tk.Canvas(root, width=canvas_width, height=canvas_height, bg="gray")
+        tmpCanvas.pack()
+        
+        return tmpCanvas
+    
+    def __generate_grid(self) -> list[list[TkCell]]:
+        """Create a 2d list representation of our maze with TkCells
+        """
+        
+        tmp = [[0 for y in range(self.height)] for x in range(self.width)]
+        
+        for x in range(self.width):
+            for y in range(self.height):
+                # Set our origin point for our cell and set the oppposing corner based on size
+                origin = (x * self.cell_size, y * self.cell_size)
+                opposite = (origin[0] + self.cell_size, origin[1] + self.cell_size)
+                
+                # Generate our cell object and add to array
+                tkCell = self.__generate_cell(origin, opposite, "black")
+                tmp[x][y] = tkCell
+                
+        return tmp
+    
+    def __generate_cell(self, point1: tuple[int,int], point2: tuple[int,int], cellColor: str) -> TkCell:
+        """Generate a square with origin at point1 and draw borders using the vertice between point1 and opposing corner point2
+        
+        Return TkCell that stores object id's of cell and all four borders
+        """
+        
+        x1,y1 = self.__adjust_point(point1)
+        x2,y2 = self.__adjust_point(point2)
+        
+        cell = self.canvas.create_rectangle(x1, y1, x2, y2, fill=cellColor, outline="")
+        
+        # Using our cell vertices, determine our border lines
+        top = self.canvas.create_line(x1, y2, x2, y2, fill="black", width=self.edge_width)
+        bottom = self.canvas.create_line(x1, y1, x2, y1, fill="black", width=self.edge_width)
+        left = self.canvas.create_line(x1, y1, x1, y2, fill="black", width=self.edge_width)
+        right = self.canvas.create_line(x2, y1, x2, y2, fill="black", width=self.edge_width)
+        
+        return TkCell(cell, top, bottom, left, right)
+
+    # Position our points on the canvas so that 0,0 is bottom,left and add padding
+    def __adjust_point(self, point: tuple[int,int]) -> tuple[int,int]:
+        """Add padding to x,y coordinates and reverse y axis
+        """
+        x = point[0] + self.cell_padding
+        y = self.__reverse_coordinate(point[1] + self.cell_padding)
+        
+        return (x,y)
+
+    # 0,0 in GUI is top, left we want to reverse the y coordinate so 0,0 is bottom, left
+    def __reverse_coordinate(self, yCoord: int) -> int:
+        """Subtract the given y coordinate from the canvas height
+        """
+        return self.canvas.winfo_reqheight() - yCoord
+
+    

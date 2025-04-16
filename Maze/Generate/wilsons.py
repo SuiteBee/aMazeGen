@@ -31,6 +31,9 @@ class Wilsons(IGenerate):
             # Walk our path in reverse (set borders)
             self.__walk_back()
         
+        # Tell our drawing library we have finished generating 
+        self.window.finish_generation()
+        
         return self.cells
 
     # Walk from random point to point in maze
@@ -47,7 +50,7 @@ class Wilsons(IGenerate):
         current = self.__take_step(src)
         
         # Mark our travel path red
-        self.plot.draw_frame(current, ("cell", "red"))
+        self.window.draw_frame(current, ("cell", "red"))
         
         # Continue until we have reached the random point
         while current not in self.visited:
@@ -56,13 +59,15 @@ class Wilsons(IGenerate):
                 # Remove loop from path and retry
                 while current != self.path[-1]:
                     removed = self.path.pop()
-                    self.plot.draw_frame(removed, ("cell", "black"))
+                    
+                    # Restore our backtracked cells to the original black color
+                    self.window.draw_frame(removed, ("cell", "black"))
             else:
                 # Path is valid continue from current
                 self.path.append(current)
                 
                 # Mark our travel path red
-                self.plot.draw_frame(current, ("cell", "red"))
+                self.window.draw_frame(current, ("cell", "red"))
                 
             # Get next cell to add to path
             current = self.__take_step(current)

@@ -31,6 +31,9 @@ class Prims(IGenerate):
             self._add_cell(frt)
             
             self.__expand_frontier(frt)
+            
+        # Tell our drawing library we have finished generating 
+        self.window.finish_generation()
         
         return self.cells
         
@@ -46,7 +49,8 @@ class Prims(IGenerate):
                 # Cells within the frontier are denoted as red squares
                 plot_frames.append((cell, ("cell", "red")))
         
-        self.plot.draw_multiple(plot_frames)
+        # Draw all of our expanded frontier cells at once
+        self.window.draw_multiple(plot_frames)
         
     def __get_neighbors(self, address: tuple[int,int]) -> list[tuple[int,int]]:
         """Return a list of neighboring cell coordinates that are within the maze bounds

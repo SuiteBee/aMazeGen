@@ -1,7 +1,7 @@
 import matplotlib.patches as patches
 import matplotlib.collections as collect
 
-class PlotCell:
+class MplCell:
     def __init__(self, x: int, y: int, facecolor: str, cellSize: float, borderSize: float) -> None:
         # Retrieve cell shape, size and color
         self.patch = self.__get_rect(x, y, facecolor, cellSize)
