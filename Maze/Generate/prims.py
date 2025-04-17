@@ -1,7 +1,6 @@
 from Maze.iGenerate import IGenerate
 from Maze.cell import Cell
 import random
-import threading
 
 class Prims(IGenerate):
     def __init__(self, width, height, isAnimated):

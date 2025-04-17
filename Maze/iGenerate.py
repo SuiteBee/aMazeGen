@@ -14,7 +14,7 @@ class IGenerate(ABC):
         self.isAnimated = isAnimated
         
         # Maze resides in cells
-        self.cells = [[Cell() for y in range(height)] for x in range(width)]
+        self.cells = [[Cell(x,y) for y in range(height)] for x in range(width)]
         self.visited = []
         self.unvisited = [] 
         self.path = []

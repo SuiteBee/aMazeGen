@@ -12,7 +12,7 @@ class TkDraw:
         # Should we update the window after every operation
         self.isAnimated = isAnimated
         # Rate at which updates occur
-        self.timeStep = 1
+        self.timeStep = 50
         
         # Graphic representation of our maze
         self.grid = TkGrid(self.window, width, height)
@@ -66,3 +66,6 @@ class TkDraw:
         
         # Pause until dialog is destroyed
         self.window.wait_window(dialog)
+        
+    def begin_solution(self) -> None:
+        pass

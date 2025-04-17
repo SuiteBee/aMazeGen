@@ -1,5 +1,5 @@
 from Maze.cell import Cell
-from Draw.mplPlot import MplPlot
+from Draw.tkDraw import TkDraw
 from abc import ABC, abstractmethod
 
 class ISolvable(ABC):
@@ -9,8 +9,7 @@ class ISolvable(ABC):
         """
         self.maze = maze
         self.isAnimated = isAnimated
-        
-        # Maze resides in cells
+    
         self.visited = []
         self.unvisited = []
         self.path = []
@@ -20,7 +19,8 @@ class ISolvable(ABC):
         self.directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
         
         # The visualized maze (animated will include a pause)
-        self.plot = MplPlot(self.cells, isAnimated)
+        self.grid = TkDraw(self.cells, isAnimated)
+        self.solution = None
         
     
     @abstractmethod
