@@ -45,6 +45,9 @@ class TkGrid:
         elif part == "border":
             direction = instruction[1]
             self.cells[x][y].remove_border(self.canvas, direction)
+        elif part == "text":
+            text = instruction[1]
+            self.cells[x][y].add_text(self.canvas, text)
             
     def open(self) -> None:
         """Draw entry/exit and arrows
@@ -140,7 +143,12 @@ class TkGrid:
         left = self.canvas.create_line(x1, y1, x1, y2, fill="black", width=self.edge_width)
         right = self.canvas.create_line(x2, y1, x2, y2, fill="black", width=self.edge_width)
         
-        return TkCell(cell, top, bottom, left, right)
+        half_width = self.cell_size/2
+        x1 += half_width
+        y1 -= half_width
+        text = self.canvas.create_text(x1, y1, fill="black", text="")
+        
+        return TkCell(cell, top, bottom, left, right, text)
 
     # Position our points on the canvas so that 0,0 is bottom,left and add padding
     def __adjust_point(self, point: tuple[int,int]) -> tuple[int,int]:

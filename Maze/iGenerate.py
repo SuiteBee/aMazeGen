@@ -38,8 +38,8 @@ class IGenerate(ABC):
         
         # Create a list and add all cell addresses
         lst = []
-        for x in range(self.width):
-            for y in range(self.height):
+        for y in range(self.height):
+            for x in range(self.width):
                 lst.append((x,y))
         return lst
     

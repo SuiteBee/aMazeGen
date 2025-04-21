@@ -12,7 +12,7 @@ class TkDraw:
         # Should we update the window after every operation
         self.isAnimated = isAnimated
         # Rate at which updates occur
-        self.timeStep = 50
+        self.timeStep = 1
         
         # Graphic representation of our maze
         self.grid = TkGrid(self.window, width, height)

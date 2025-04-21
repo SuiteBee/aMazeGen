@@ -4,10 +4,10 @@ from Maze.Generate.ellers import Ellers
 
 maze = None
 
-width = 6
-height = 6
+width = 25
+height = 25
 
-#maze = Prims(width, height, True)
+#maze = Prims(width, height, False)
 #maze = Wilsons(width, height, False)
 maze = Ellers(width, height, True)
 
