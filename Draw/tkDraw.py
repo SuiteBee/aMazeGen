@@ -47,6 +47,39 @@ class TkDraw:
         if self.isAnimated:
             self.window.after(self.timeStep, self.window.update())
             
+    def set_timestep(self, value):
+        self.timeStep = value
+            
+    def begin_generation(self) -> None:
+        """Show a dialog box to pause GUI and set timestep
+        """
+        
+        if self.isAnimated:
+            # Make an update to bring up our canvas
+            self.window.update()
+            
+            # Create a popup
+            dWidth = 200
+            dHeight = 180
+            dialog = tk.Toplevel(self.window)
+            dialog.geometry(f"{dWidth}x{dHeight}")
+            
+            lbl = tk.Label(dialog, text="Ready to start?", font=("Arial",12))
+            lbl.pack(ipady=10)
+            
+            # Add a slider to select our timestep
+            slider = tk.Scale(dialog, label="Time Step (ms)", font=("Arial",8), from_=1, to=500, orient=tk.HORIZONTAL, command=self.set_timestep, variable=self.timeStep)
+            slider.pack()
+
+            # Add a button that will continue execution when closed
+            button = tk.Button(dialog, text="Begin", command=dialog.destroy, width=10)
+            bPosX = (dWidth/2) - (button.winfo_reqwidth()/2)
+            bPosY = (dHeight - 60)
+            button.place(x=bPosX, y=bPosY)
+            
+            # Pause until dialog is destroyed
+            self.window.wait_window(dialog)
+        
     def finish_generation(self) -> None:
         """Show a dialog box to pause GUI
         """
@@ -57,24 +90,21 @@ class TkDraw:
         self.window.update()
         
         # Create a popup
-        dWidth = 200
-        dHeight = 100
+        dWidth = 250
+        dHeight = 120
         dialog = tk.Toplevel(self.window)
         dialog.geometry(f"{dWidth}x{dHeight}")
         
-        line_one = tk.Label(dialog, text="Finished Generating Maze")
-        line_one.pack()
-        line_two = tk.Label(dialog, text="Ready to solve?")
-        line_two.pack()
+        line_one = tk.Label(dialog, text="Finished Generating Maze", font=("Arial",12))
+        line_one.pack(pady=(10, 0))
+        line_two = tk.Label(dialog, text="Ready to solve?", font=("Arial",12))
+        line_two.pack(ipady=0)
 
         # Add a button that will continue execution when closed
-        button = tk.Button(dialog, text="Continue", command=dialog.destroy)
+        button = tk.Button(dialog, text="Continue", command=dialog.destroy, width=10)
         bPosX = (dWidth/2) - (button.winfo_reqwidth()/2)
-        bPosY = (dHeight - 40)
+        bPosY = (dHeight - 50)
         button.place(x=bPosX, y=bPosY)
         
         # Pause until dialog is destroyed
         self.window.wait_window(dialog)
-        
-    def begin_solution(self) -> None:
-        pass

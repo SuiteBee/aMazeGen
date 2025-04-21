@@ -12,6 +12,9 @@ class Ellers(IGenerate):
 
     def generate(self) -> list[list[Cell]]:
         
+        # Tell our drawing library we are ready to generate
+        self.window.begin_generation()
+        
         # Starting from the top until the second to last row
         for row_index in range(self.height - 1, 0, -1):
             

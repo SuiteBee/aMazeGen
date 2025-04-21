@@ -12,6 +12,9 @@ class Prims(IGenerate):
         
     def generate(self) -> list[list[Cell]]:
 
+        # Tell our drawing library we are ready to generate
+        self.window.begin_generation()  
+        
         # Add first point to the maze
         start = (random.randrange(self.width - 1), random.randrange(self.height - 1))
         self._add_cell(start)
