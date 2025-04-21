@@ -3,9 +3,6 @@ from Draw.tkGrid import TkGrid
 
 class TkDraw:
     def __init__(self, width: int, height: int, isAnimated: bool) -> None:
-        """
-        """
-        
         self.window = tk.Tk()
         self.window.title("Maze Generator")
         

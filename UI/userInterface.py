@@ -39,6 +39,7 @@ class UserInterface:
         
         self.mGen = 0
         self.mSolve = 0
+        self.mAnimate = -1
         
     # Main UI loop
     def show(self) -> None:
@@ -60,6 +61,8 @@ class UserInterface:
                 self.mGen = self.__get_gen()
             elif self.mSolve == 0:
                 self.mSolve = self.__get_solve()
+            elif self.mAnimate == -1:
+                self.mAnimate = self.__get_animate()
                 
         self.__reset()
         self.__show_selections()
@@ -89,6 +92,7 @@ class UserInterface:
         print(f"Dimensions: {self.width}x{self.height}")
         print(f"Generating: {self.__generate_name()}") 
         print(f"Solving: {self.__solution_name()}")
+        print(f"Animating: {"Yes" if self.mAnimate else "No"}")
         print()
         
     def __get_width(self) -> int:
@@ -138,10 +142,10 @@ class UserInterface:
             except ValueError as e:
                 print(f"Error: {e}")
             
-            if tmpGen == 1:
+            if tmpGen in(1,2,3):
                 return tmpGen
             else:
-                print("Choose one of the available options: valid input 1")
+                print("Choose one of the available options: valid input 1-3")
             
     def __get_solve(self) -> int:
         """Print contents of solution algorithm array and gather user input for selection
@@ -163,12 +167,29 @@ class UserInterface:
                 return tmpSolve
             else:
                 print("Choose one of the available options: valid input 1-3")
+                
+    def __get_animate(self) -> bool:
+        """Gather user input for mAnimate
+        """
+        while True:
+            tmpAnimate = input("Would you like to animate the generation and solution? Y(es)/N(o):")
+            try:
+                tmpAnimate = tmpAnimate.upper()
+            except ValueError as e:
+                print(f"Error: {e}")
+            
+            if tmpAnimate == "Y":
+                return True
+            elif tmpAnimate == "N":
+                return False
+            else:
+                print("Enter a valid selection: valid input y/n")
             
     def __selection_required(self) -> bool:
         """Determines if all required inputs have been collected
         """
         
-        return self.width == 0 or self.height == 0 or self.mGen == 0 or self.mSolve == 0
+        return self.width == 0 or self.height == 0 or self.mGen == 0 or self.mSolve == 0 or self.mAnimate == -1
         
     def __generate_name(self) -> str:
         """Get name of selected generation algorithm
