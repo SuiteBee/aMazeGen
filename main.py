@@ -3,22 +3,32 @@ from Maze.Generate.prims import Prims
 from Maze.Generate.ellers import Ellers
 
 from UI.userInterface import UserInterface
+from Draw.tkDraw import TkDraw
 
 # Instantiate interface and make selections
 options = UserInterface()
 options.show()
 
 # Pause before continuing
-input("Press any key to generate and solve...")
+input("Press any key to open the GUI...")
 
-maze = None
+# Creates a window to draw/animate our maze
+graphic_output = TkDraw(options.width, options.height, options.mAnimate)
 
 # Generation algorithm
+factory = None
 if options.mGen == 1:
-    maze = Wilsons(options.width, options.height, options.mAnimate)
+    factory = Wilsons(graphic_output, options.width, options.height, options.mAnimate)
 elif options.mGen == 2:
-    maze = Prims(options.width, options.height, options.mAnimate)
+    factory = Prims(graphic_output, options.width, options.height, options.mAnimate)
 elif options.mGen == 3:
-    maze = Ellers(options.width, options.height, options.mAnimate)
+    factory = Ellers(graphic_output, options.width, options.height, options.mAnimate)
 
-maze.generate()
+# Tell our drawing class we are ready to generate
+graphic_output.begin_generation()
+
+# Generate method will return our maze as list[list[cell]]
+maze = factory.generate()
+
+# Tell our drawing class we have finished generating 
+graphic_output.finish_generation()

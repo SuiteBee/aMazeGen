@@ -1,20 +1,17 @@
 from Maze.iGenerate import IGenerate
 from Maze.cell import Cell
+from Draw.tkDraw import TkDraw
 import random
 
 class Prims(IGenerate):
-    def __init__(self, width, height, isAnimated):
-        super().__init__(width, height, isAnimated)
+    def __init__(self, output: TkDraw, width, height, isAnimated):
+        super().__init__(output, width, height, isAnimated)
         
         # For prims unvisited is empty until we select our starting cell
         # We refer to this as the frontier i.e. all cells NOT in the maze neighboring cells that ARE within the maze
         self.unvisited = []
         
     def generate(self) -> list[list[Cell]]:
-
-        # Tell our drawing library we are ready to generate
-        self.window.begin_generation()  
-        
         # Add first point to the maze
         start = (random.randrange(self.width - 1), random.randrange(self.height - 1))
         self._add_cell(start)
@@ -33,9 +30,6 @@ class Prims(IGenerate):
             self._add_cell(frt)
             
             self.__expand_frontier(frt)
-            
-        # Tell our drawing library we have finished generating 
-        self.window.finish_generation()
         
         return self.cells
         

@@ -3,7 +3,7 @@ from Maze.cell import Cell
 from Draw.tkDraw import TkDraw
 
 class IGenerate(ABC):
-    def __init__(self, width: int, height: int, isAnimated: bool):
+    def __init__(self, output: TkDraw, width: int, height: int, isAnimated: bool):
         """Generate a maze with columns(width) and rows(height) 
         
         isAnimated introduces a timestep to visualize the generation of the maze
@@ -24,7 +24,7 @@ class IGenerate(ABC):
         self.directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
         
         # The visualized maze (animated will include a pause)
-        self.window = TkDraw(width, height, isAnimated)
+        self.window = output
         
     @abstractmethod
     def generate(self) -> list[list[Cell]]:

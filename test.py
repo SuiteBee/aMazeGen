@@ -9,7 +9,7 @@ height = 10
 
 #maze = Prims(width, height, True)
 #maze = Wilsons(width, height, False)
-maze = Ellers(width, height, False)
+maze = Ellers(width, height, True)
 
 maze.generate()
 

@@ -1,20 +1,18 @@
 from Maze.iGenerate import IGenerate
 from Maze.cell import Cell
+from Draw.tkDraw import TkDraw
 import random
 
 class Ellers(IGenerate):
-    def __init__(self, width, height, isAnimated):
-        super().__init__(width, height, isAnimated)
+    def __init__(self, output: TkDraw, width, height, isAnimated):
+        super().__init__(output, width, height, isAnimated)
 
         # For Ellers we need to keep track of a list of disjointed sets
         # We will keep the length at most the width of the maze
         self.set_paths = []
 
     def generate(self) -> list[list[Cell]]:
-        
-        # Tell our drawing library we are ready to generate
-        self.window.begin_generation()
-        
+
         # Starting from the top until the second to last row
         for row_index in range(self.height - 1, 0, -1):
             
@@ -38,10 +36,7 @@ class Ellers(IGenerate):
         last_row = self.get_cell_row(0)
         self.expand_path(last_row)
         self.remove_walls(last_row, True)
-                  
-        # Tell our drawing library we have finished generating 
-        self.window.finish_generation()
-        
+
         return self.cells
     
     def get_cell_row(self, index) -> list[Cell]:

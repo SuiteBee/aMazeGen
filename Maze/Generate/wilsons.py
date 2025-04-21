@@ -1,18 +1,16 @@
 from Maze.iGenerate import IGenerate
 from Maze.cell import Cell
+from Draw.tkDraw import TkDraw
 import random
 
 class Wilsons(IGenerate):
-    def __init__(self, width, height, isAnimated):
-        super().__init__(width, height, isAnimated)
+    def __init__(self, output: TkDraw, width, height, isAnimated):
+        super().__init__(output, width, height, isAnimated)
         
         # For wilsons unvisited is initialized with all cells
         self.unvisited = self._fill_unvisited()
         
     def generate(self) -> list[list[Cell]]:
-        # Tell our drawing library we are ready to generate
-        self.window.begin_generation()
-        
         # Add first point to the maze
         start = (random.randrange(self.width - 1), random.randrange(self.height - 1))
         self._add_cell(start)
@@ -32,10 +30,7 @@ class Wilsons(IGenerate):
             
             # Walk our path in reverse (set borders)
             self.__walk_back()
-        
-        # Tell our drawing library we have finished generating 
-        self.window.finish_generation()
-        
+
         return self.cells
 
     # Walk from random point to point in maze

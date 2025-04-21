@@ -47,7 +47,7 @@ class TkDraw:
         if self.isAnimated:
             self.window.after(self.timeStep, self.window.update())
             
-    def set_timestep(self, value):
+    def __set_timestep(self, value: int) -> None:
         self.timeStep = value
             
     def begin_generation(self) -> None:
@@ -68,7 +68,7 @@ class TkDraw:
             lbl.pack(ipady=10)
             
             # Add a slider to select our timestep
-            slider = tk.Scale(dialog, label="Time Step (ms)", font=("Arial",8), from_=1, to=500, orient=tk.HORIZONTAL, command=self.set_timestep, variable=self.timeStep)
+            slider = tk.Scale(dialog, label="Time Step (ms)", font=("Arial",8), from_=1, to=500, orient=tk.HORIZONTAL, command=self.__set_timestep, variable=self.timeStep)
             slider.pack()
 
             # Add a button that will continue execution when closed
@@ -97,7 +97,7 @@ class TkDraw:
         
         line_one = tk.Label(dialog, text="Finished Generating Maze", font=("Arial",12))
         line_one.pack(pady=(10, 0))
-        line_two = tk.Label(dialog, text="Ready to solve?", font=("Arial",12))
+        line_two = tk.Label(dialog, text="Ready to Solve?", font=("Arial",10))
         line_two.pack(ipady=0)
 
         # Add a button that will continue execution when closed
