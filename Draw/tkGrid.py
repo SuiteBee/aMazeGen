@@ -63,7 +63,7 @@ class TkGrid:
         entryX2 = self.cell_padding - self.cell_padding/4
         entryY2 = self.cell_size/2 + self.cell_padding
         
-        self.canvas.create_line(entryX1, entryY1, entryX2, entryY2, arrow=tk.LAST, fill="black", width=5)
+        self.canvas.create_line(entryX1, entryY1, entryX2, entryY2, arrow=tk.LAST, fill="black", width=3)
         
         # draw exit arrow
         exitX1 = self.canvas.winfo_reqwidth() - self.cell_padding + self.cell_padding/4
@@ -71,7 +71,7 @@ class TkGrid:
         exitX2 = self.canvas.winfo_reqwidth() - self.cell_padding/4
         exitY2 = self.canvas.winfo_reqheight() - self.cell_size/2 - self.cell_padding
         
-        self.canvas.create_line(exitX1, exitY1, exitX2, exitY2, arrow=tk.LAST, fill="black", width=5)
+        self.canvas.create_line(exitX1, exitY1, exitX2, exitY2, arrow=tk.LAST, fill="black", width=3)
 
     def __get_canvas(self, root: tk.Tk) -> tk.Canvas:
         """Determine canvas size based on target dimensions and aspect 

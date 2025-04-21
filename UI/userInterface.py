@@ -20,9 +20,9 @@ instructions = [
 
 generateAlgorithms = [
     "Chose one of the following algorithms",
-    "1.) Wilsons (slow)",
-    "2.) Prims (linear)",
-    "3.) Ellers (fast)"
+    "1.) Wilson's (slow)",
+    "2.) Prim's (linear)",
+    "3.) Eller's (fast)"
 ]
 
 solveAlgorithms = [

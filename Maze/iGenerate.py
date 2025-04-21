@@ -62,9 +62,7 @@ class IGenerate(ABC):
         
         # Get the direction we came from
         dir = self.__get_direction(first, second)
-
-        plot_frames = []
-
+        
         # Since we are traveling in reverse we can interpret this is as coming from [dir]
         if dir == "down":
             # Remove walls from maze
@@ -72,28 +70,28 @@ class IGenerate(ABC):
             self.cells[second[0]][second[1]].bottom = 0
             
             # Remove walls from graphic output
-            plot_frames.append((first, ("border", "top")))
-            plot_frames.append((second, ("border", "bottom")))
+            self.window.queue_frame(first, ("border", "top"))
+            self.window.queue_frame(second, ("border", "bottom"))
         elif dir == "up":
             self.cells[first[0]][first[1]].bottom = 0
             self.cells[second[0]][second[1]].top = 0
             
-            plot_frames.append((first, ("border", "bottom")))
-            plot_frames.append((second, ("border", "top")))
+            self.window.queue_frame(first, ("border", "bottom"))
+            self.window.queue_frame(second, ("border", "top"))
         elif dir == "left":
             self.cells[first[0]][first[1]].right = 0
             self.cells[second[0]][second[1]].left = 0
 
-            plot_frames.append((first, ("border", "right")))
-            plot_frames.append((second, ("border", "left")))
+            self.window.queue_frame(first, ("border", "right"))
+            self.window.queue_frame(second, ("border", "left"))
         elif dir == "right":
             self.cells[first[0]][first[1]].left = 0
             self.cells[second[0]][second[1]].right = 0
             
-            plot_frames.append((first, ("border", "left")))
-            plot_frames.append((second, ("border", "right")))
+            self.window.queue_frame(first, ("border", "left"))
+            self.window.queue_frame(second, ("border", "right"))
             
-        self.window.draw_multiple(plot_frames)
+        self.window.draw_multiple()
         
     def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> str:      
         """Return a string for the direction of travel between first (x,y) and second (x,y)

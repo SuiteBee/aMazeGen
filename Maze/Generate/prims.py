@@ -38,18 +38,17 @@ class Prims(IGenerate):
         
     def __expand_frontier(self, address: tuple[int,int]) -> None:
         new_frontier = self.__get_neighbors(address)
-        plot_frames = []
-        
+
         for cell in new_frontier:
             # Cell is not already a part of the maze or frontier
             if not cell in self.visited and not cell in self.unvisited:
                 self.unvisited.append(cell)
             
                 # Cells within the frontier are denoted as red squares
-                plot_frames.append((cell, ("cell", "red")))
+                self.window.queue_frame(cell, ("cell", "red"))
         
         # Draw all of our expanded frontier cells at once
-        self.window.draw_multiple(plot_frames)
+        self.window.draw_multiple()
         
     def __get_neighbors(self, address: tuple[int,int]) -> list[tuple[int,int]]:
         """Return a list of neighboring cell coordinates that are within the maze bounds

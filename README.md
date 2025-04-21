@@ -14,11 +14,12 @@ The primary goal of this project was to learn Python. To do this I decided to wo
     - Width x Height
     - Generation Method
     - Solution Method
+    - Option to animate
 
 + Implement 3 generation algorithms
-    - Wilsons
+    - Wilson's
     - Prim's
-    - Kruskals or Aldous-Broder
+    - Eller's
 
 + Implement 3 solution algorithms
     - BFS

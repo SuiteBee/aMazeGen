@@ -5,7 +5,7 @@ import random
 class Ellers(IGenerate):
     def __init__(self, width, height, isAnimated):
         super().__init__(width, height, isAnimated)
-        
+
         # For Ellers we need to keep track of a list of disjointed sets
         # We will keep the length at most the width of the maze
         self.set_paths = []
@@ -44,31 +44,25 @@ class Ellers(IGenerate):
     def get_cell_row(self, index) -> list[Cell]:
         """Get a row of cells (0 is bottom) and color them white
         """
-        
         row = []
         for column in range(self.width):
             cell = self.cells[column][index]
             row.append(cell)  
-            
-            self.window.draw_frame((cell.x, cell.y), ("cell", "white"))
-
         return row
     
     def get_path(self, cell: Cell) -> list[tuple[int,int]]:
         """Loop through sets until we find one that contains our cell address
         """
-        
         for path in self.set_paths:
             if (cell.x, cell.y) in path:
                 return path
             
-    def expand_path(self, row: list[Cell]):
+    def expand_path(self, row: list[Cell]) -> None:
         """Get our working row of disjointed sets
         """
-        
         for cell in row:
             if cell.top == 0:
-                # If this cell does not have a top wall we can add it to the set the cell above was a member of
+                # If this cell does not have a ceiling we can add it to the set the cell above was a member of
                 cell_above = self.cells[cell.x][cell.y+1]
                 existing_path = self.get_path(cell_above)
                 
@@ -79,38 +73,55 @@ class Ellers(IGenerate):
                 # Can be merged with another set in later step
                 new_path = [(cell.x, cell.y)]
                 self.set_paths.append(new_path)
+                self.window.draw_frame((cell.x, cell.y), ("cell", "red"))
             
-    def clean_path(self, row: list[Cell]):
+    def clean_path(self, row: list[Cell]) -> None:
         """Remove cells from paths that can no longer expand downwards
         """
-        
         for cell in row:
             if cell.bottom == 1:
-                # If this cell has a bottom wall we can remove it from its set
+                # If this cell has a floor we can remove it from its set
                 # The path was terminated here or we can follow it by the remaining member cells that did travel downwards 
                 existing_path = self.get_path(cell)
                 existing_path.remove((cell.x, cell.y))
-   
-    def path_swap(self, path: list[tuple[int,int]], toAdd: Cell, toRemove: Cell):
+            
+            self.window.queue_frame((cell.x, cell.y), ("cell", "white"))
+            
+        self.window.draw_multiple()
+            
+    def path_swap(self, path: list[tuple[int,int]], toAdd: Cell, toRemove: Cell) -> None:
         """Remove redundant address from given path by replacing it with a relavent one 
         """
-        
         # This set has traveled downwards at the toRemove cell
         # We can track this path by removing the above cell and adding the one below
         address_to_remove = (toRemove.x, toRemove.y)
         path.remove(address_to_remove)
         path.append((toAdd.x, toAdd.y))
         
-    def path_merge(self, first: list[tuple[int,int]], second: list[tuple[int,int]]):
+        self.window.queue_frame((toAdd.x, toAdd.y), ("cell", "pink"))
+        self.window.queue_frame((toRemove.x, toRemove.y), ("cell", "white"))
+        self.window.draw_multiple()
+        
+        
+    def path_merge(self, first: list[tuple[int,int]], second: list[tuple[int,int]]) -> None:
         """A vertical wall was removed and the paths on either side will be joined into one set
         """
-        
         combined = first + second
-        self.set_paths.remove(first)
-        self.set_paths.remove(second)
-        self.set_paths.append(combined)       
+        
+        # Get index of the first set and join with the second
+        path_index = self.set_paths.index(first)
+        self.set_paths[path_index] = combined
+        
+        # Remove the second set
+        self.set_paths.remove(second)   
+        
+        for address in combined:
+            # The following is queued to color cell and remove borders at the same time
+            self.window.queue_frame((address[0], address[1]), ("cell", "white"))
+            
+        self.window.draw_multiple()
    
-    def remove_walls(self, row: list[Cell], final_row: bool):
+    def remove_walls(self, row: list[Cell], final_row: bool) -> None:
         """From left to right of row, randomly decide to remove vertical walls separating cells that are not a part of the same path
         
         When a wall is removed we will join the two paths on the opposing sides of the removed wall
@@ -128,12 +139,11 @@ class Ellers(IGenerate):
                     neighbor_path = self.get_path(neighbor)
                     self.path_merge(path, neighbor_path)
                  
-    def remove_floors(self): 
+    def remove_floors(self) -> None: 
         """For every cell address in row (indiscriminant order), randomly remove horizontal walls
         
         Will loop through set paths and ensure at least one cell in every set has a downward exit
         """
-        
         # For every set
         for path in self.set_paths:
             # Randomly remove a horizontal floor from each cell address
@@ -146,11 +156,13 @@ class Ellers(IGenerate):
                 random_address = random.choice(path)
                 random_cell = self.cells[random_address[0]][random_address[1]]
                 self.destory_floor(random_cell, False)
+        
+        # Clear out frame_queue (draw removed floors)                
+        self.window.draw_multiple()
 
-    def set_has_exit(self, path: list[tuple[int,int]]):
+    def set_has_exit(self, path: list[tuple[int,int]]) -> bool:
         """Check all cells in the set(path) to ensure at minimum one of them has a downward exit
         """
-        
         for address in path:
             if self.cells[address[0]][address[1]].bottom == 0:
                 return True
@@ -162,19 +174,18 @@ class Ellers(IGenerate):
         
         Set cell borders and draw to screen
         """
-        
         # Randomly decide to remove wall
         remove_right = random.choice([True, False]) if rng else True
 
         if remove_right:
             # Neighbor is cell to the right
-            neighbor = self.cells[cell.x+1][cell.y]
+            neighbor: Cell = self.cells[cell.x+1][cell.y]
             
             cell.right = 0
             neighbor.left = 0
             
-            self.window.draw_frame((cell.x, cell.y), ("border", "right"))
-            self.window.draw_frame((neighbor.x, neighbor.y), ("border", "left"))
+            self.window.queue_frame((cell.x, cell.y), ("border", "right"))
+            self.window.queue_frame((neighbor.x, neighbor.y), ("border", "left"))
 
         return remove_right
             
@@ -184,20 +195,19 @@ class Ellers(IGenerate):
         
         Set cell borders and draw to screen
         """
-        
         # Randomly decide to remove floor
         remove_bottom = random.choice([True, False]) if rng else True
         
         if remove_bottom:
             # Neighbor is cell below
-            neighbor = self.cells[cell.x][cell.y-1]
+            neighbor: Cell = self.cells[cell.x][cell.y-1]
             
             cell.bottom = 0
             neighbor.top = 0
-            
-            self.window.draw_frame((cell.x, cell.y), ("border", "bottom"))
-            self.window.draw_frame((neighbor.x, neighbor.y), ("border", "top"))
-            
+        
+            self.window.queue_frame((cell.x, cell.y), ("border", "bottom"))
+            self.window.queue_frame((neighbor.x, neighbor.y), ("border", "top"))
+
         return remove_bottom
         
         
