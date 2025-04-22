@@ -26,13 +26,12 @@ class TkGrid:
     def modify(self, address: tuple[int,int], instruction: tuple[str,str]) -> None:
         """Perform instruction operation on cell at address(x,y)
         
-        This will color the cell face or hide a specified border
+        This can color the cell face, hide a specified border or add text
         
         Usage 
             modify((x,y), ("cell", "red"))
-            modify((x,y), ("border", "top"))
-            
-        Valid border strings: top/bottom/left/right
+            modify((x,y), ("border", "top/bottom/left/right"))
+            modify((x,y), ("text", "str"))
         """
         x = address[0]
         y = address[1]
@@ -43,14 +42,14 @@ class TkGrid:
             color = instruction[1]
             self.cells[x][y].set_color(self.canvas, color)
         elif part == "border":
-            direction = instruction[1]
-            self.cells[x][y].remove_border(self.canvas, direction)
+            border = instruction[1]
+            self.cells[x][y].remove_border(self.canvas, border)
         elif part == "text":
             text = instruction[1]
             self.cells[x][y].add_text(self.canvas, text)
             
     def open(self) -> None:
-        """Draw entry/exit and arrows
+        """Open entry/exit cells and draw arrow
         """
 
         # Set entry and exit (top left, bottom right)
@@ -128,13 +127,13 @@ class TkGrid:
     
     def __generate_cell(self, point1: tuple[int,int], point2: tuple[int,int], cellColor: str) -> TkCell:
         """Generate a square with origin at point1 and draw borders using the vertice between point1 and opposing corner point2
-        
-        Return TkCell that stores object id's of cell and all four borders
         """
         
+        # Convert our points from logical space to screen space
         x1,y1 = self.__adjust_point(point1)
         x2,y2 = self.__adjust_point(point2)
         
+        # Create our cell face
         cell = self.canvas.create_rectangle(x1, y1, x2, y2, fill=cellColor, outline="")
         
         # Using our cell vertices, determine our border lines
@@ -143,6 +142,7 @@ class TkGrid:
         left = self.canvas.create_line(x1, y1, x1, y2, fill="black", width=self.edge_width)
         right = self.canvas.create_line(x2, y1, x2, y2, fill="black", width=self.edge_width)
         
+        # Create a text field in the center of our cell
         half_width = self.cell_size/2
         x1 += half_width
         y1 -= half_width

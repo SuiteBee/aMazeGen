@@ -4,8 +4,8 @@ from Draw.tkDraw import TkDraw
 import random
 
 class Ellers(IGenerate):
-    def __init__(self, output: TkDraw, width, height, isAnimated):
-        super().__init__(output, width, height, isAnimated)
+    def __init__(self, output: TkDraw, width, height):
+        super().__init__(output, width, height)
 
         # For Ellers we need to keep track of a list of disjointed sets
         # We will keep the length at most the width of the maze

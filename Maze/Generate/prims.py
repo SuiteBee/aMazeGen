@@ -4,8 +4,8 @@ from Draw.tkDraw import TkDraw
 import random
 
 class Prims(IGenerate):
-    def __init__(self, output: TkDraw, width, height, isAnimated):
-        super().__init__(output, width, height, isAnimated)
+    def __init__(self, output: TkDraw, width, height):
+        super().__init__(output, width, height)
         
         # For prims unvisited is empty until we select our starting cell
         # We refer to this as the frontier i.e. all cells NOT in the maze neighboring cells that ARE within the maze

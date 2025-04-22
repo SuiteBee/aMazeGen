@@ -51,7 +51,7 @@ class TkDraw:
         self.timeStep = value
             
     def begin_generation(self) -> None:
-        """Show a dialog box to pause GUI and set timestep
+        """Show a dialog box to pause GUI and set animation timestep if applicable
         """
         
         if self.isAnimated:
@@ -90,21 +90,43 @@ class TkDraw:
         self.window.update()
         
         # Create a popup
-        dWidth = 250
-        dHeight = 120
         dialog = tk.Toplevel(self.window)
-        dialog.geometry(f"{dWidth}x{dHeight}")
         
+        # Add some text
         line_one = tk.Label(dialog, text="Finished Generating Maze", font=("Arial",12))
-        line_one.pack(pady=(10, 0))
         line_two = tk.Label(dialog, text="Ready to Solve?", font=("Arial",10))
-        line_two.pack(ipady=0)
-
+        
         # Add a button that will continue execution when closed
         button = tk.Button(dialog, text="Continue", command=dialog.destroy, width=10)
-        bPosX = (dWidth/2) - (button.winfo_reqwidth()/2)
-        bPosY = (dHeight - 50)
-        button.place(x=bPosX, y=bPosY)
-        
+            
+        if self.isAnimated:
+            # Position elements WITH timestep slider
+            dWidth = 250
+            dHeight = 200
+            dialog.geometry(f"{dWidth}x{dHeight}")
+            
+            line_one.pack(pady=(10, 0))
+            line_two.pack(ipady=0)
+            
+            # Add a slider to select our timestep
+            slider = tk.Scale(dialog, label="Time Step (ms)", font=("Arial",8), from_=1, to=500, orient=tk.HORIZONTAL, command=self.__set_timestep, variable=self.timeStep)
+            slider.pack(pady=(10,0))
+            
+            bPosX = (dWidth/2) - (button.winfo_reqwidth()/2)
+            bPosY = (dHeight - 50)
+            button.place(x=bPosX, y=bPosY)
+        else:
+            # Position elements WITHOUT timestep slider
+            dWidth = 250
+            dHeight = 120
+            dialog.geometry(f"{dWidth}x{dHeight}")
+            
+            line_one.pack(pady=(10, 0))
+            line_two.pack(ipady=0)
+            
+            bPosX = (dWidth/2) - (button.winfo_reqwidth()/2)
+            bPosY = (dHeight - 50)
+            button.place(x=bPosX, y=bPosY)
+
         # Pause until dialog is destroyed
         self.window.wait_window(dialog)

@@ -4,8 +4,8 @@ from Draw.tkDraw import TkDraw
 import random
 
 class Wilsons(IGenerate):
-    def __init__(self, output: TkDraw, width, height, isAnimated):
-        super().__init__(output, width, height, isAnimated)
+    def __init__(self, output: TkDraw, width, height):
+        super().__init__(output, width, height)
         
         # For wilsons unvisited is initialized with all cells
         self.unvisited = self._fill_unvisited()

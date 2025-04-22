@@ -3,15 +3,12 @@ from Maze.cell import Cell
 from Draw.tkDraw import TkDraw
 
 class IGenerate(ABC):
-    def __init__(self, output: TkDraw, width: int, height: int, isAnimated: bool):
+    def __init__(self, output: TkDraw, width: int, height: int):
         """Generate a maze with columns(width) and rows(height) 
-        
-        isAnimated introduces a timestep to visualize the generation of the maze
         """
         
         self.width = width
         self.height = height
-        self.isAnimated = isAnimated
         
         # Maze resides in cells
         self.cells = [[Cell(x,y) for y in range(height)] for x in range(width)]

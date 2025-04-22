@@ -13,22 +13,22 @@ options.show()
 input("Press any key to open the GUI...")
 
 # Creates a window to draw/animate our maze
-graphic_output = TkDraw(options.width, options.height, options.mAnimate)
+gui = TkDraw(options.width, options.height, options.mAnimate)
 
 # Generation algorithm
-factory = None
+architect = None
 if options.mGen == 1:
-    factory = Wilsons(graphic_output, options.width, options.height, options.mAnimate)
+    architect = Wilsons(gui, options.width, options.height)
 elif options.mGen == 2:
-    factory = Prims(graphic_output, options.width, options.height, options.mAnimate)
+    architect = Prims(gui, options.width, options.height)
 elif options.mGen == 3:
-    factory = Ellers(graphic_output, options.width, options.height, options.mAnimate)
+    architect = Ellers(gui, options.width, options.height)
 
-# Tell our drawing class we are ready to generate
-graphic_output.begin_generation()
+# Tell our GUI we are ready to generate
+gui.begin_generation()
 
 # Generate method will return our maze as list[list[cell]]
-maze = factory.generate()
+maze = architect.generate()
 
-# Tell our drawing class we have finished generating 
-graphic_output.finish_generation()
+# Tell our GUI we have finished generating 
+gui.finish_generation()
