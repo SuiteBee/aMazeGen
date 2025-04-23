@@ -1,14 +1,15 @@
-from Maze.iGenerate import IGenerate
+from Maze.iGenerable import IGenerable
 from Maze.cell import Cell
 from Draw.tkDraw import TkDraw
 import random
 
-class Wilsons(IGenerate):
+class Wilsons(IGenerable):
     def __init__(self, output: TkDraw, width, height):
         super().__init__(output, width, height)
         
         # For wilsons unvisited is initialized with all cells
         self.unvisited = self._fill_unvisited()
+        self.path = []
         
     def generate(self) -> list[list[Cell]]:
         # Add first point to the maze

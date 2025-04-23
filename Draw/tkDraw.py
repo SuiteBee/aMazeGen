@@ -130,3 +130,22 @@ class TkDraw:
 
         # Pause until dialog is destroyed
         self.window.wait_window(dialog)
+        
+    def finish_solution(self) -> None:
+        # Create a popup
+        dWidth = 200
+        dHeight = 100
+        dialog = tk.Toplevel(self.window)
+        dialog.geometry(f"{dWidth}x{dHeight}")
+        
+        lbl = tk.Label(dialog, text="Solved", font=("Arial",12))
+        lbl.pack(ipady=10)
+    
+        # Add a button that will continue execution when closed
+        button = tk.Button(dialog, text="Close", command=dialog.destroy, width=10)
+        bPosX = (dWidth/2) - (button.winfo_reqwidth()/2)
+        bPosY = (dHeight - 60)
+        button.place(x=bPosX, y=bPosY)
+        
+        # Pause until dialog is destroyed
+        self.window.wait_window(dialog)

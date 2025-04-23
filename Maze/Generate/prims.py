@@ -1,9 +1,9 @@
-from Maze.iGenerate import IGenerate
+from Maze.iGenerable import IGenerable
 from Maze.cell import Cell
 from Draw.tkDraw import TkDraw
 import random
 
-class Prims(IGenerate):
+class Prims(IGenerable):
     def __init__(self, output: TkDraw, width, height):
         super().__init__(output, width, height)
         

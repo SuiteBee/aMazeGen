@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from Maze.cell import Cell
 from Draw.tkDraw import TkDraw
 
-class IGenerate(ABC):
+class IGenerable(ABC):
     def __init__(self, output: TkDraw, width: int, height: int):
-        """Generate a maze with columns(width) and rows(height) 
+        """Generate a perfect maze with columns(width) and rows(height) 
         """
         
         self.width = width
@@ -12,15 +12,16 @@ class IGenerate(ABC):
         
         # Maze resides in cells
         self.cells = [[Cell(x,y) for y in range(height)] for x in range(width)]
+        
+        # List of coordinates we have visited or not
         self.visited = []
         self.unvisited = [] 
-        self.path = []
         
         # Possible Directions (Up), (Down), (Left), (Right)
         # Directions as x,y coordinates
         self.directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
         
-        # The visualized maze (animated will include a pause)
+        # The graphic output display
         self.window = output
         
     @abstractmethod
@@ -39,6 +40,9 @@ class IGenerate(ABC):
             for x in range(self.width):
                 lst.append((x,y))
         return lst
+    
+    def _get_cell(self, address: tuple[int,int]) -> Cell:
+        return self.cells[address[0]][address[1]]
     
     def _add_cell(self, address: tuple[int,int]) -> None:
         """Add address (x,y) to visited and remove from unvisited
@@ -63,27 +67,27 @@ class IGenerate(ABC):
         # Since we are traveling in reverse we can interpret this is as coming from [dir]
         if dir == "down":
             # Remove walls from maze
-            self.cells[first[0]][first[1]].top = 0
-            self.cells[second[0]][second[1]].bottom = 0
+            self._get_cell(first).top = 0
+            self._get_cell(second).bottom = 0
             
             # Remove walls from graphic output
             self.window.queue_frame(first, ("border", "top"))
             self.window.queue_frame(second, ("border", "bottom"))
         elif dir == "up":
-            self.cells[first[0]][first[1]].bottom = 0
-            self.cells[second[0]][second[1]].top = 0
+            self._get_cell(first).bottom = 0
+            self._get_cell(second).top = 0
             
             self.window.queue_frame(first, ("border", "bottom"))
             self.window.queue_frame(second, ("border", "top"))
         elif dir == "left":
-            self.cells[first[0]][first[1]].right = 0
-            self.cells[second[0]][second[1]].left = 0
+            self._get_cell(first).right = 0
+            self._get_cell(second).left = 0
 
             self.window.queue_frame(first, ("border", "right"))
             self.window.queue_frame(second, ("border", "left"))
         elif dir == "right":
-            self.cells[first[0]][first[1]].left = 0
-            self.cells[second[0]][second[1]].right = 0
+            self._get_cell(first).left = 0
+            self._get_cell(second).right = 0
             
             self.window.queue_frame(first, ("border", "left"))
             self.window.queue_frame(second, ("border", "right"))

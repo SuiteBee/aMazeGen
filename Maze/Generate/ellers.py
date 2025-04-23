@@ -1,9 +1,9 @@
-from Maze.iGenerate import IGenerate
+from Maze.iGenerable import IGenerable
 from Maze.cell import Cell
 from Draw.tkDraw import TkDraw
 import random
 
-class Ellers(IGenerate):
+class Ellers(IGenerable):
     def __init__(self, output: TkDraw, width, height):
         super().__init__(output, width, height)
 
@@ -52,7 +52,7 @@ class Ellers(IGenerate):
         """Loop through sets until we find one that contains our cell address
         """
         for path in self.set_paths:
-            if (cell.x, cell.y) in path:
+            if cell.address in path:
                 return path
             
     def expand_path(self, row: list[Cell]) -> None:
@@ -69,9 +69,9 @@ class Ellers(IGenerate):
             else:
                 # This is considered a new path because it does not connect to any cells so we can add it to its own set
                 # Can be merged with another set in later step
-                new_path = [(cell.x, cell.y)]
+                new_path = [cell.address]
                 self.set_paths.append(new_path)
-                self.window.draw_frame((cell.x, cell.y), ("cell", "red"))
+                self.window.draw_frame(cell.address, ("cell", "red"))
             
     def clean_path(self, row: list[Cell]) -> None:
         """Remove cells from paths that can no longer expand downwards
@@ -81,9 +81,9 @@ class Ellers(IGenerate):
                 # If this cell has a floor we can remove it from its set
                 # The path was terminated here or we can follow it by the remaining member cells that did travel downwards 
                 existing_path = self.get_path(cell)
-                existing_path.remove((cell.x, cell.y))
+                existing_path.remove(cell.address)
             
-            self.window.queue_frame((cell.x, cell.y), ("cell", "white"))
+            self.window.queue_frame(cell.address, ("cell", "white"))
             
         self.window.draw_multiple()
             
@@ -92,12 +92,11 @@ class Ellers(IGenerate):
         """
         # This set has traveled downwards at the toRemove cell
         # We can track this path by removing the above cell and adding the one below
-        address_to_remove = (toRemove.x, toRemove.y)
-        path.remove(address_to_remove)
-        path.append((toAdd.x, toAdd.y))
+        path.remove(toRemove.address)
+        path.append(toAdd.address)
         
-        self.window.queue_frame((toAdd.x, toAdd.y), ("cell", "pink"))
-        self.window.queue_frame((toRemove.x, toRemove.y), ("cell", "white"))
+        self.window.queue_frame(toAdd.address, ("cell", "pink"))
+        self.window.queue_frame(toRemove.address, ("cell", "white"))
         self.window.draw_multiple()
         
         
@@ -130,7 +129,7 @@ class Ellers(IGenerate):
             neighbor = row[index+1]
             
             # If the neighboring cell is not in the same set we can continue
-            if not (neighbor.x, neighbor.y) in path:
+            if not neighbor.address in path:
                 # We are not on the last row, flip a coin to remove the wall
                 if self.destroy_wall(cell, not final_row):
                     # The wall was removed, join the sets on either side
@@ -146,14 +145,12 @@ class Ellers(IGenerate):
         for path in self.set_paths:
             # Randomly remove a horizontal floor from each cell address
             for address in path:
-                cell = self.cells[address[0]][address[1]]
-                self.destory_floor(cell, True)
+                self.destory_floor(self._get_cell(address), True)
 
             # If we didn't remove one from the above set(path) pick one at random from the set to remove
             if not self.set_has_exit(path):
                 random_address = random.choice(path)
-                random_cell = self.cells[random_address[0]][random_address[1]]
-                self.destory_floor(random_cell, False)
+                self.destory_floor(self._get_cell(random_address), False)
         
         # Clear out frame_queue (draw removed floors)                
         self.window.draw_multiple()
@@ -162,7 +159,7 @@ class Ellers(IGenerate):
         """Check all cells in the set(path) to ensure at minimum one of them has a downward exit
         """
         for address in path:
-            if self.cells[address[0]][address[1]].bottom == 0:
+            if self._get_cell(address).bottom == 0:
                 return True
             
         return False
@@ -182,8 +179,8 @@ class Ellers(IGenerate):
             cell.right = 0
             neighbor.left = 0
             
-            self.window.queue_frame((cell.x, cell.y), ("border", "right"))
-            self.window.queue_frame((neighbor.x, neighbor.y), ("border", "left"))
+            self.window.queue_frame(cell.address, ("border", "right"))
+            self.window.queue_frame(neighbor.address, ("border", "left"))
 
         return remove_right
             
@@ -203,8 +200,8 @@ class Ellers(IGenerate):
             cell.bottom = 0
             neighbor.top = 0
         
-            self.window.queue_frame((cell.x, cell.y), ("border", "bottom"))
-            self.window.queue_frame((neighbor.x, neighbor.y), ("border", "top"))
+            self.window.queue_frame(cell.address, ("border", "bottom"))
+            self.window.queue_frame(neighbor.address, ("border", "top"))
 
         return remove_bottom
         
