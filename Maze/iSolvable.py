@@ -32,17 +32,36 @@ class ISolvable(ABC):
         """
         pass
     
+    def _get_neighbors(self, cell: Cell) -> list[Cell]:
+        neighbors = []
+        
+        if cell.left == 0 and not cell.address == self.start:
+            neighbors.append(self.__get_left(cell.address))
+            
+        if cell.right == 0 and not cell.address == self.finish:
+            neighbors.append(self.__get_right(cell.address))
+            
+        if cell.top == 0:
+            neighbors.append(self.__get_above(cell.address))
+            
+        if cell.bottom == 0:
+            neighbors.append(self.__get_below(cell.address))
+            
+        return neighbors
+    
     def _get_cell(self, address: tuple[int,int]) -> Cell:
         return self.maze[address[0]][address[1]]
     
-    def _get_left(self, address: tuple[int,int]) -> Cell:
+    def __get_left(self, address: tuple[int,int]) -> Cell:
         return self._get_cell((address[0]-1,address[1]))
     
-    def _get_right(self, address: tuple[int,int]) -> Cell:
+    def __get_right(self, address: tuple[int,int]) -> Cell:
         return self._get_cell((address[0]+1,address[1]))
     
-    def _get_above(self, address: tuple[int,int]) -> Cell:
+    def __get_above(self, address: tuple[int,int]) -> Cell:
         return self._get_cell((address[0],address[1]+1))
     
-    def _get_below(self, address: tuple[int,int]) -> Cell:
+    def __get_below(self, address: tuple[int,int]) -> Cell:
         return self._get_cell((address[0],address[1]-1))
+    
+    

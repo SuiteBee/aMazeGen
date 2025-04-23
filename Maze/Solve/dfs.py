@@ -30,7 +30,7 @@ class DFS(ISolvable):
             self.__visit(cell, False)
             return
 
-        unv_neighbors = [neighbor for neighbor in self.__get_neighbors(cell) if not neighbor.visited]
+        unv_neighbors = [neighbor for neighbor in self._get_neighbors(cell) if not neighbor.visited]
         has_unv_neighbors = len(unv_neighbors) > 0
 
         self.__visit(cell, has_unv_neighbors)
@@ -43,23 +43,6 @@ class DFS(ISolvable):
             next_cell = self._get_cell(next_address)
             self.__recursive_depth_search(next_cell)
 
-    def __get_neighbors(self, cell: Cell) -> list[Cell]:
-        neighbors = []
-        
-        if cell.left == 0 and not cell.address == self.start:
-            neighbors.append(self._get_left(cell.address))
-            
-        if cell.right == 0 and not cell.address == self.finish:
-            neighbors.append(self._get_right(cell.address))
-            
-        if cell.top == 0:
-            neighbors.append(self._get_above(cell.address))
-            
-        if cell.bottom == 0:
-            neighbors.append(self._get_below(cell.address))
-            
-        return neighbors
-            
     def __visit(self, cell: Cell, has_unv_neighbors: bool):
         if not cell.visited:
             cell.visited = True

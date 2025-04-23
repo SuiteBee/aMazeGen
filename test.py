@@ -7,8 +7,8 @@ from Draw.tkDraw import TkDraw
 
 maze = None
 
-width = 20
-height = 20
+width = 10
+height = 10
 
 start = (0, height-1)
 finish = (width-1, 0)
@@ -22,7 +22,7 @@ output = TkDraw(width, height, animate)
 gen = Ellers(output, width, height)
 
 # Tell our drawing class we are ready to generate
-#output.begin_generation()
+output.begin_generation()
 
 maze = gen.generate()
 
