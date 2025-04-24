@@ -45,7 +45,7 @@ class Prims(IGenerable):
                 self.window.animator.queue_frame(cell, ("cell", "red"))
         
         # Draw all of our expanded frontier cells at once
-        self.window.animator.draw_multiple()
+        self.window.animator.draw_pending()
         
     def __get_neighbors(self, address: tuple[int,int]) -> list[tuple[int,int]]:
         """Return a list of neighboring cell coordinates that are within the maze bounds

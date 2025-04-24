@@ -3,6 +3,7 @@ from Maze.Generate.wilsons import Wilsons
 from Maze.Generate.ellers import Ellers
 
 from Maze.Solve.dfs import DFS
+from Maze.Solve.bfs import BFS
 from Draw.tkController import TkController
 
 maze = None
@@ -29,7 +30,6 @@ maze = gen.generate()
 output.finish_generation()
 
 solution = DFS(output, maze)
-
 
 solution.solve(start, finish)
 

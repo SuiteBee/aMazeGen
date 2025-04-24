@@ -18,14 +18,14 @@ class TkDraw:
         self.grid = TkGrid(self.window, width, height)
         
     def queue_frame(self, address: tuple[int,int], instruction: tuple[str,str]) -> None:
-        """Append a cell alteration to a queue to be completed and emptied by calling draw_multiple()
+        """Append a cell alteration to a queue to be completed and emptied by calling draw_pending()
         
         Allows for multiple changes without waiting for update(timeStep)
         """
         
         self.frame_queue.append((address, instruction))
 
-    def draw_multiple(self) -> None:
+    def draw_pending(self) -> None:
         """Step through elements in the frame queue and if animated update after completion of all frames
         """
         

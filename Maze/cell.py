@@ -12,3 +12,4 @@ class Cell:
         self.right = 1
         
         self.visited = False
+        self.parent = None

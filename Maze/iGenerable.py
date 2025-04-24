@@ -92,7 +92,7 @@ class IGenerable(ABC):
             self.window.animator.queue_frame(first, ("border", "left"))
             self.window.animator.queue_frame(second, ("border", "right"))
             
-        self.window.animator.draw_multiple()
+        self.window.animator.draw_pending()
         
     def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> str:      
         """Return a string for the direction of travel between first (x,y) and second (x,y)

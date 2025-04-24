@@ -2,6 +2,9 @@ from Maze.Generate.wilsons import Wilsons
 from Maze.Generate.prims import Prims
 from Maze.Generate.ellers import Ellers
 
+from Maze.Solve.dfs import DFS
+from Maze.Solve.bfs import BFS
+
 from UI.userInterface import UserInterface
 from Draw.tkController import TkController
 
@@ -32,3 +35,23 @@ maze = architect.generate()
 
 # Tell our GUI we have finished generating 
 gui.finish_generation()
+
+# Solution algorithm
+pathfinder = None
+if options.mSolve == 1:
+    pathfinder = DFS(gui, maze)
+elif options.mSolve == 2:
+    pathfinder = BFS(gui, maze)
+elif options.mSolve == 3:
+    pass
+
+# Set our start and end coordinates
+start = (0, options.height-1)
+finish = (options.width-1, 0)
+
+# Solve method will reutnr our solution as list[Cell]
+solution = pathfinder.solve(start, finish)
+
+# Tell our gui we have solved the maze
+gui.finish_solution()
+

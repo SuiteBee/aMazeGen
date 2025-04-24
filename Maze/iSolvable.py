@@ -9,8 +9,8 @@ class ISolvable(ABC):
         """
         self.maze = maze
                 
-        self.start = None
-        self.finish = None
+        self.start_address = None
+        self.finish_address = None
         
         self.width = len(maze[0])
         self.height = len(maze)
@@ -18,10 +18,6 @@ class ISolvable(ABC):
         self.visited = []
         self.solution = []
         self.path = []
-        
-        # Possible Directions (Up), (Down), (Left), (Right)
-        # Directions as x,y coordinates
-        self.directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
         
          # The graphic output display
         self.window = output
@@ -35,10 +31,10 @@ class ISolvable(ABC):
     def _get_neighbors(self, cell: Cell) -> list[Cell]:
         neighbors = []
         
-        if cell.left == 0 and not cell.address == self.start:
+        if cell.left == 0 and not cell.address == self.start_address:
             neighbors.append(self.__get_left(cell.address))
             
-        if cell.right == 0 and not cell.address == self.finish:
+        if cell.right == 0 and not cell.address == self.finish_address:
             neighbors.append(self.__get_right(cell.address))
             
         if cell.top == 0:

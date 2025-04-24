@@ -85,7 +85,7 @@ class Ellers(IGenerable):
             
             self.window.animator.queue_frame(cell.address, ("cell", "white"))
             
-        self.window.animator.draw_multiple()
+        self.window.animator.draw_pending()
             
     def __swap_path(self, path: list[tuple[int,int]], toAdd: Cell, toRemove: Cell) -> None:
         """Remove redundant address from given path by replacing it with a relavent one 
@@ -97,7 +97,7 @@ class Ellers(IGenerable):
         
         self.window.animator.queue_frame(toAdd.address, ("cell", "pink"))
         self.window.animator.queue_frame(toRemove.address, ("cell", "white"))
-        self.window.animator.draw_multiple()
+        self.window.animator.draw_pending()
         
         
     def __merge_path(self, first: list[tuple[int,int]], second: list[tuple[int,int]]) -> None:
@@ -116,7 +116,7 @@ class Ellers(IGenerable):
             # The following is queued to color cell and remove borders at the same time
             self.window.animator.queue_frame((address[0], address[1]), ("cell", "white"))
             
-        self.window.animator.draw_multiple()
+        self.window.animator.draw_pending()
         
     def __has_exit_path(self, path: list[tuple[int,int]]) -> bool:
         """Check all cells in the set(path) to ensure at minimum one of them has a downward exit
@@ -182,7 +182,7 @@ class Ellers(IGenerable):
                 self.__destory_floor(self._get_cell(random_address), False)
         
         # Clear out frame_queue (draw removed floors)                
-        self.window.animator.draw_multiple()
+        self.window.animator.draw_pending()
 
     def __destory_floor(self, cell: Cell, rng: bool) -> bool:               
         """Remove bottom cell border, randomly if rng=True and return if successful
