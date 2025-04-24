@@ -15,6 +15,7 @@ The primary goal of this project was to learn Python. To do this I decided to wo
     - Generation Method
     - Solution Method
     - Option to animate
+    - Ability to pause animation
 
 + Implement 3 generation algorithms
     - Wilson's
@@ -24,10 +25,9 @@ The primary goal of this project was to learn Python. To do this I decided to wo
 + Implement 3 solution algorithms
     - BFS
     - DFS
-    - A* or Tremaux
+    - Best 
 
 + Visualize both of these processes
-    - Draw the maze in MatPlotLib
+    - Draw the maze using TKinter (MatPlotLib too slow)
     - Animate the generation
     - Animate the solution
-    - Compare the end results with a heatmap

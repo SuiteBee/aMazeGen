@@ -1,10 +1,10 @@
 from Maze.iGenerable import IGenerable
 from Maze.cell import Cell
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 import random
 
 class Prims(IGenerable):
-    def __init__(self, output: TkDraw, width, height):
+    def __init__(self, output: TkController, width, height):
         super().__init__(output, width, height)
         
         # For prims unvisited is empty until we select our starting cell
@@ -42,10 +42,10 @@ class Prims(IGenerable):
                 self.unvisited.append(cell)
             
                 # Cells within the frontier are denoted as red squares
-                self.window.queue_frame(cell, ("cell", "red"))
+                self.window.animator.queue_frame(cell, ("cell", "red"))
         
         # Draw all of our expanded frontier cells at once
-        self.window.draw_multiple()
+        self.window.animator.draw_multiple()
         
     def __get_neighbors(self, address: tuple[int,int]) -> list[tuple[int,int]]:
         """Return a list of neighboring cell coordinates that are within the maze bounds

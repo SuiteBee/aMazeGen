@@ -5,10 +5,10 @@ class Cell:
         self.y = y
         self.address = (x,y)
         
+        # For solution
         self.top = 1
         self.bottom = 1
         self.left = 1
         self.right = 1
         
-        # For solution
         self.visited = False

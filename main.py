@@ -3,7 +3,7 @@ from Maze.Generate.prims import Prims
 from Maze.Generate.ellers import Ellers
 
 from UI.userInterface import UserInterface
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 
 # Instantiate interface and make selections
 options = UserInterface()
@@ -13,7 +13,7 @@ options.show()
 input("Press any key to open the GUI...")
 
 # Creates a window to draw/animate our maze
-gui = TkDraw(options.width, options.height, options.mAnimate)
+gui = TkController(options.width, options.height, options.mAnimate)
 
 # Generation algorithm
 architect = None

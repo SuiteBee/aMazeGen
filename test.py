@@ -3,7 +3,7 @@ from Maze.Generate.wilsons import Wilsons
 from Maze.Generate.ellers import Ellers
 
 from Maze.Solve.dfs import DFS
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 
 maze = None
 
@@ -15,7 +15,7 @@ finish = (width-1, 0)
 
 animate = True
 
-output = TkDraw(width, height, animate)
+output = TkController(width, height, animate)
 
 #gen = Prims(output, width, height)
 #gen = Wilsons(output, width, height)
@@ -26,7 +26,6 @@ output.begin_generation()
 
 maze = gen.generate()
 
-output.isAnimated = True
 output.finish_generation()
 
 solution = DFS(output, maze)

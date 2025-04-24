@@ -1,10 +1,10 @@
 from Maze.iGenerable import IGenerable
 from Maze.cell import Cell
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 import random
 
 class Wilsons(IGenerable):
-    def __init__(self, output: TkDraw, width, height):
+    def __init__(self, output: TkController, width, height):
         super().__init__(output, width, height)
         
         # For wilsons unvisited is initialized with all cells
@@ -48,7 +48,7 @@ class Wilsons(IGenerable):
         current = self.__take_step(src)
         
         # Mark our travel path red
-        self.window.draw_frame(current, ("cell", "red"))
+        self.window.animator.draw_frame(current, ("cell", "red"))
         
         # Continue until we have reached the random point
         while current not in self.visited:
@@ -59,13 +59,13 @@ class Wilsons(IGenerable):
                     removed = self.path.pop()
                     
                     # Restore our backtracked cells to the original black color
-                    self.window.draw_frame(removed, ("cell", "black"))
+                    self.window.animator.draw_frame(removed, ("cell", "black"))
             else:
                 # Path is valid continue from current
                 self.path.append(current)
                 
                 # Mark our travel path red
-                self.window.draw_frame(current, ("cell", "red"))
+                self.window.animator.draw_frame(current, ("cell", "red"))
                 
             # Get next cell to add to path
             current = self.__take_step(current)

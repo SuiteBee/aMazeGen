@@ -1,10 +1,10 @@
 from Maze.iGenerable import IGenerable
 from Maze.cell import Cell
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 import random
 
 class Ellers(IGenerable):
-    def __init__(self, output: TkDraw, width, height):
+    def __init__(self, output: TkController, width, height):
         super().__init__(output, width, height)
 
         # For Ellers we need to keep track of a list of disjointed sets
@@ -71,7 +71,7 @@ class Ellers(IGenerable):
                 # Can be merged with another set in later step
                 new_path = [cell.address]
                 self.set_paths.append(new_path)
-                self.window.draw_frame(cell.address, ("cell", "red"))
+                self.window.animator.draw_frame(cell.address, ("cell", "red"))
             
     def __clean_path(self, row: list[Cell]) -> None:
         """Remove cells from paths that can no longer expand downwards
@@ -83,9 +83,9 @@ class Ellers(IGenerable):
                 existing_path = self.__get_path(cell)
                 existing_path.remove(cell.address)
             
-            self.window.queue_frame(cell.address, ("cell", "white"))
+            self.window.animator.queue_frame(cell.address, ("cell", "white"))
             
-        self.window.draw_multiple()
+        self.window.animator.draw_multiple()
             
     def __swap_path(self, path: list[tuple[int,int]], toAdd: Cell, toRemove: Cell) -> None:
         """Remove redundant address from given path by replacing it with a relavent one 
@@ -95,9 +95,9 @@ class Ellers(IGenerable):
         path.remove(toRemove.address)
         path.append(toAdd.address)
         
-        self.window.queue_frame(toAdd.address, ("cell", "pink"))
-        self.window.queue_frame(toRemove.address, ("cell", "white"))
-        self.window.draw_multiple()
+        self.window.animator.queue_frame(toAdd.address, ("cell", "pink"))
+        self.window.animator.queue_frame(toRemove.address, ("cell", "white"))
+        self.window.animator.draw_multiple()
         
         
     def __merge_path(self, first: list[tuple[int,int]], second: list[tuple[int,int]]) -> None:
@@ -114,9 +114,9 @@ class Ellers(IGenerable):
         
         for address in combined:
             # The following is queued to color cell and remove borders at the same time
-            self.window.queue_frame((address[0], address[1]), ("cell", "white"))
+            self.window.animator.queue_frame((address[0], address[1]), ("cell", "white"))
             
-        self.window.draw_multiple()
+        self.window.animator.draw_multiple()
         
     def __has_exit_path(self, path: list[tuple[int,int]]) -> bool:
         """Check all cells in the set(path) to ensure at minimum one of them has a downward exit
@@ -160,8 +160,8 @@ class Ellers(IGenerable):
             cell.right = 0
             neighbor.left = 0
             
-            self.window.queue_frame(cell.address, ("border", "right"))
-            self.window.queue_frame(neighbor.address, ("border", "left"))
+            self.window.animator.queue_frame(cell.address, ("border", "right"))
+            self.window.animator.queue_frame(neighbor.address, ("border", "left"))
 
         return remove_right
                  
@@ -182,7 +182,7 @@ class Ellers(IGenerable):
                 self.__destory_floor(self._get_cell(random_address), False)
         
         # Clear out frame_queue (draw removed floors)                
-        self.window.draw_multiple()
+        self.window.animator.draw_multiple()
 
     def __destory_floor(self, cell: Cell, rng: bool) -> bool:               
         """Remove bottom cell border, randomly if rng=True and return if successful
@@ -199,8 +199,8 @@ class Ellers(IGenerable):
             cell.bottom = 0
             neighbor.top = 0
         
-            self.window.queue_frame(cell.address, ("border", "bottom"))
-            self.window.queue_frame(neighbor.address, ("border", "top"))
+            self.window.animator.queue_frame(cell.address, ("border", "bottom"))
+            self.window.animator.queue_frame(neighbor.address, ("border", "top"))
 
         return remove_bottom
         

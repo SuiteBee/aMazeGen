@@ -1,10 +1,10 @@
 from Maze.iSolvable import ISolvable
 from Maze.cell import Cell
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 import random
 
 class DFS(ISolvable):
-    def __init__(self, output: TkDraw, maze: list[list[Cell]]):
+    def __init__(self, output: TkController, maze: list[list[Cell]]):
         super().__init__(output, maze)
         
     def solve(self, start: tuple[int,int], finish: tuple[int,int]) -> list[Cell]: 
@@ -15,12 +15,12 @@ class DFS(ISolvable):
         
         while len(self.path) > 0:
             address = self.path.pop(0)
-            self.window.queue_frame(address, ("cell", "green"))
+            self.window.animator.queue_frame(address, ("cell", "green"))
             
             cell = self._get_cell(address)
             self.solution.append(cell)
         
-        self.window.draw_multiple()
+        self.window.animator.draw_multiple()
         
         return self.solution
         
@@ -47,8 +47,8 @@ class DFS(ISolvable):
         if not cell.visited:
             cell.visited = True
             self.path.append(cell.address)
-            self.window.draw_frame(cell.address, ("cell", "red"))
+            self.window.animator.draw_frame(cell.address, ("cell", "red"))
         elif has_unv_neighbors > 0:
             self.path.append(cell.address)
         else:
-            self.window.draw_frame(cell.address, ("cell", "pink"))
+           self.window.animator.draw_frame(cell.address, ("cell", "pink"))

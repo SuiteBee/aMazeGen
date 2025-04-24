@@ -29,7 +29,7 @@ solveAlgorithms = [
     "Choose one of the following algorithms",
     "1.) Depth First",
     "2.) Breadth First",
-    "3.) A* or Tremaux"
+    "3.) Best First"
 ]
 
 class UserInterface:

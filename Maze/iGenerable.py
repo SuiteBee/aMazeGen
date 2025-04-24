@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from Maze.cell import Cell
-from Draw.tkDraw import TkDraw
+from Draw.tkController import TkController
 
 class IGenerable(ABC):
-    def __init__(self, output: TkDraw, width: int, height: int):
+    def __init__(self, output: TkController, width: int, height: int):
         """Generate a perfect maze with columns(width) and rows(height) 
         """
         
@@ -55,7 +55,7 @@ class IGenerable(ABC):
             self.unvisited.remove(address)
         
         # Cells added to maze are denoted as white squares    
-        self.window.draw_frame(address, ("cell", "white"))
+        self.window.animator.draw_frame(address, ("cell", "white"))
         
     def _cut_path(self, first: tuple[int,int], second: tuple[int,int]) -> None:
         """Remove walls between two cells first (x,y) and second (x,y)
@@ -71,28 +71,28 @@ class IGenerable(ABC):
             self._get_cell(second).bottom = 0
             
             # Remove walls from graphic output
-            self.window.queue_frame(first, ("border", "top"))
-            self.window.queue_frame(second, ("border", "bottom"))
+            self.window.animator.queue_frame(first, ("border", "top"))
+            self.window.animator.queue_frame(second, ("border", "bottom"))
         elif dir == "up":
             self._get_cell(first).bottom = 0
             self._get_cell(second).top = 0
             
-            self.window.queue_frame(first, ("border", "bottom"))
-            self.window.queue_frame(second, ("border", "top"))
+            self.window.animator.queue_frame(first, ("border", "bottom"))
+            self.window.animator.queue_frame(second, ("border", "top"))
         elif dir == "left":
             self._get_cell(first).right = 0
             self._get_cell(second).left = 0
 
-            self.window.queue_frame(first, ("border", "right"))
-            self.window.queue_frame(second, ("border", "left"))
+            self.window.animator.queue_frame(first, ("border", "right"))
+            self.window.animator.queue_frame(second, ("border", "left"))
         elif dir == "right":
             self._get_cell(first).left = 0
             self._get_cell(second).right = 0
             
-            self.window.queue_frame(first, ("border", "left"))
-            self.window.queue_frame(second, ("border", "right"))
+            self.window.animator.queue_frame(first, ("border", "left"))
+            self.window.animator.queue_frame(second, ("border", "right"))
             
-        self.window.draw_multiple()
+        self.window.animator.draw_multiple()
         
     def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> str:      
         """Return a string for the direction of travel between first (x,y) and second (x,y)

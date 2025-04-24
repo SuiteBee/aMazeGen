@@ -1,9 +1,9 @@
-from Maze.cell import Cell
-from Draw.tkDraw import TkDraw
 from abc import ABC, abstractmethod
+from Maze.cell import Cell
+from Draw.tkController import TkController
 
 class ISolvable(ABC):
-    def __init__(self, output: TkDraw, maze: list[list[Cell]]):
+    def __init__(self, output: TkController, maze: list[list[Cell]]):
         """Maze is a 2d list of Cell
         isAnimated will introduce a timestep to visualize the solution of the maze
         """
