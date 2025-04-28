@@ -32,7 +32,7 @@ solveAlgorithms = [
     "3.) Best First"
 ]
 
-class UserInterface:
+class ShellInterface:
     def __init__(self) -> None:
         self.width = 0
         self.height = 0
@@ -178,9 +178,9 @@ class UserInterface:
             except ValueError as e:
                 print(f"Error: {e}")
             
-            if tmpAnimate == "Y":
+            if tmpAnimate in ("Y", "YES"):
                 return True
-            elif tmpAnimate == "N":
+            elif tmpAnimate in ("N", "NO"):
                 return False
             else:
                 print("Enter a valid selection: valid input y/n")

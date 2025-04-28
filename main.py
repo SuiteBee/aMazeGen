@@ -1,3 +1,5 @@
+import sys
+
 from Maze.Generate.wilsons import Wilsons
 from Maze.Generate.prims import Prims
 from Maze.Generate.ellers import Ellers
@@ -6,15 +8,27 @@ from Maze.Solve.dfs import DFS
 from Maze.Solve.bfs import BFS
 from Maze.Solve.best import Best
 
-from UI.userInterface import UserInterface
+from UI.noInterface import NoInterface
+from UI.shellInterface import ShellInterface
 from Draw.tkController import TkController
 
-# Instantiate interface and make selections
-options = UserInterface()
-options.show()
-
-# Pause before continuing
-input("Press any key to open the GUI...")
+# Determine whether to open the interactive shell or run with command line arguments
+if len(sys.argv) - 1 > 0:
+    # Arugments given, process arguments
+    options = NoInterface()
+    
+    # Pass all arguments except script name
+    options.process(sys.argv[1:])
+    
+else:
+    # Instantiate interface and make selections
+    options = ShellInterface()
+    
+    # Interactive shell
+    options.show()
+    
+    # Pause before continuing
+    input("Press any key to open the GUI...")
 
 # Creates a window to draw/animate our maze
 gui = TkController(options.width, options.height, options.mAnimate)
