@@ -4,17 +4,18 @@ from Maze.Generate.ellers import Ellers
 
 from Maze.Solve.dfs import DFS
 from Maze.Solve.bfs import BFS
+from Maze.Solve.best import Best
 from Draw.tkController import TkController
 
 maze = None
 
-width = 10
-height = 10
+width = 100
+height = 100
 
 start = (0, height-1)
 finish = (width-1, 0)
 
-animate = True
+animate = False
 
 output = TkController(width, height, animate)
 
@@ -27,11 +28,20 @@ output.begin_generation()
 
 maze = gen.generate()
 
-output.finish_generation()
+output.isAnimated = True
+output.animator.isAnimated = True
 
-solution = DFS(output, maze)
+while True:
+    
+    output.finish_generation()
 
-solution.solve(start, finish)
+    solution = BFS(output, maze)   
+    solution.solve(start, finish)
 
-output.finish_solution()
+    repeat = output.finish_solution()
+
+    if repeat:
+        solution.reset()
+    else:
+        exit()
 

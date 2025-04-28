@@ -4,6 +4,7 @@ from Maze.Generate.ellers import Ellers
 
 from Maze.Solve.dfs import DFS
 from Maze.Solve.bfs import BFS
+from Maze.Solve.best import Best
 
 from UI.userInterface import UserInterface
 from Draw.tkController import TkController
@@ -33,25 +34,32 @@ gui.begin_generation()
 # Generate method will return our maze as list[list[cell]]
 maze = architect.generate()
 
-# Tell our GUI we have finished generating 
-gui.finish_generation()
-
-# Solution algorithm
-pathfinder = None
-if options.mSolve == 1:
-    pathfinder = DFS(gui, maze)
-elif options.mSolve == 2:
-    pathfinder = BFS(gui, maze)
-elif options.mSolve == 3:
-    pass
-
 # Set our start and end coordinates
 start = (0, options.height-1)
 finish = (options.width-1, 0)
 
-# Solve method will reutnr our solution as list[Cell]
-solution = pathfinder.solve(start, finish)
+# Begin solution loop, will re-run solution until [close] button is pressed
+while True:
+   # Tell our GUI we have finished generating 
+    gui.finish_generation()
 
-# Tell our gui we have solved the maze
-gui.finish_solution()
+    # Solution algorithm
+    pathfinder = None
+    if options.mSolve == 1:
+        pathfinder = DFS(gui, maze)
+    elif options.mSolve == 2:
+        pathfinder = BFS(gui, maze)
+    elif options.mSolve == 3:
+        pathfinder = Best(gui, maze) 
+    
+    # Solve method will reutnr our solution as list[Cell]
+    solution = pathfinder.solve(start, finish)
 
+    # Tell our gui we have solved the maze
+    repeat = gui.finish_solution()
+
+    # Button press from above will determine if we solve again
+    if repeat:
+        pathfinder.reset()
+    else:
+        exit()

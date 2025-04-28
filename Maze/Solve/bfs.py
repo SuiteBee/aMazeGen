@@ -54,22 +54,21 @@ class BFS(ISolvable):
         """Visit all unvisited neighbors of cell and record cell as their parent
         """
         unv_neighbors = [neighbor for neighbor in self._get_neighbors(cell) if not neighbor.visited]
-        has_unv_neighbors = len(unv_neighbors) > 0
 
-        if has_unv_neighbors:
-            for unv in unv_neighbors:
-                self.__visit(unv, cell)
-                
-                # Color our cell red to denote it is the next cell to be examined
-                self.window.animator.queue_frame(unv.address, ("cell", "red"))
-                
+        # Visit unvisited neighbors
+        for unv in unv_neighbors or []:
+            self.__visit(unv, cell)
+      
         # Color our examined cell pink as it is no longer at the forefront of the search
         self.window.animator.queue_frame(cell.address, ("cell", "pink"))
                     
 
     def __visit(self, cell: Cell, origin: Cell):
-        """Visit cell and set parent(origin)
+        """Visit cell, set parent(origin) and add to queue
         """
         cell.visited = True
         cell.parent = origin.address
         self.path.insert(0, cell.address)
+        
+        # Color our cell red to denote it is the next cell to be examined
+        self.window.animator.queue_frame(cell.address, ("cell", "red"))

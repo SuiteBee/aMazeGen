@@ -12,8 +12,18 @@ class DFS(ISolvable):
         self.finish_address = finish
         
         # Begin search from starting cell
-        start_cell = self._get_cell(self.start_address)
-        self.__recursive_depth_search(start_cell)
+        current_cell = self._get_cell(self.start_address)
+        
+        # Visit random unvisited neighbors until we reach the finish address
+        while current_cell.address != self.finish_address:
+            # Visit this cell
+            self.__visit(current_cell)
+
+            # Get next cell and repeat
+            current_cell = self._get_next(current_cell)        
+        
+        # Visit the final cell
+        self.__visit(current_cell)
         
         # Color and set our solution to return
         self.solution = self.__get_solution()
@@ -36,42 +46,36 @@ class DFS(ISolvable):
         self.window.animator.draw_pending()
         
         return shortest_path
-        
-    def __recursive_depth_search(self, cell: Cell) -> None:
-        """Recursively visit random unvisited neighbors until we reach the finish address
+            
+    def _get_next(self, cell: Cell) -> Cell:
+        """Randomly return an unvisited neighbor or backtrack to previous cell in path
         """
         
-        # Current cell is the exit, visit the final cell and return
-        if cell.address == self.finish_address:
-            self.__visit(cell, False)
-            return
-
         # Get all unvisited neighbors of cell
         unv_neighbors = [neighbor for neighbor in self._get_neighbors(cell) if not neighbor.visited]
         has_unv_neighbors = len(unv_neighbors) > 0
-
-        # Visit this cell
-        self.__visit(cell, has_unv_neighbors)
         
         if has_unv_neighbors:
             # Search random unvisited neighbor
-            next_cell = random.choice(unv_neighbors)
-            self.__recursive_depth_search(next_cell)
+            return random.choice(unv_neighbors)
         else:
             # No unvisited neighbors remain backtrack and see if last cell had any
             next_address = self.path.pop()
-            next_cell = self._get_cell(next_address)
-            self.__recursive_depth_search(next_cell)
+            return self._get_cell(next_address)
 
-    def __visit(self, cell: Cell, has_unv_neighbors: bool):
+    def __visit(self, cell: Cell):
         """Mark cell as visited and append to path
         """
+        # Get all unvisited neighbors of cell
+        unv_neighbors = [neighbor for neighbor in self._get_neighbors(cell) if not neighbor.visited]
+        has_unv_neighbors = len(unv_neighbors) > 0
+        
         if not cell.visited:
             # First visit add to path and color red
             cell.visited = True
             self.path.append(cell.address)
             self.window.animator.draw_frame(cell.address, ("cell", "red"))
-        elif has_unv_neighbors > 0:
+        elif has_unv_neighbors:
             # Backtrack to search unvisited neighbors add to path
             self.path.append(cell.address)
         else:

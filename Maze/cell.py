@@ -13,3 +13,19 @@ class Cell:
         
         self.visited = False
         self.parent = None
+        self.distance = None
+        
+    def reset_generation(self) -> None:
+        """Reset cell back to state prior to generation (walls)
+        """
+        self.top = 1
+        self.bottom = 1
+        self.left = 1
+        self.right = 1
+        
+    def reset_solution(self) -> None:
+        """Reset cell back to state prior to solving
+        """
+        self.visited = False
+        self.parent = None
+        self.distance = None

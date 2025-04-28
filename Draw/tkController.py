@@ -19,6 +19,9 @@ class TkController:
         self.continueBtn = None
         self.btnCoords = None
         
+        # Repeat switch tied to button press after solving
+        self.repeat = False
+        
     def __set_timestep(self, value: int) -> None:
         self.animator.timeStep = value
             
@@ -32,6 +35,22 @@ class TkController:
         self.pauseBtn.lower(self.continueBtn)
     
         self.controls.wait_window(self.continueBtn)
+        
+    def __repeat(self) -> None:
+        """Set a loop variable to control output and reset the control panel
+        """
+     
+        self.repeat = True
+        self.controls.destroy()
+        self.controls = None
+        
+    def __close(self) -> bool:
+        """Stop loop and reset control panel
+        """
+        
+        self.repeat = False
+        self.controls.destroy()
+        self.controls = None
         
     def __get_controls(self, width: int, height: int) -> None:
         """Create a second window if one doesn't already exist
@@ -138,19 +157,28 @@ class TkController:
             # wait until button is destroyed
             self.controls.wait_window(startButton)
         
-    def finish_solution(self) -> None:
+    def finish_solution(self) -> bool:
         """Show a dialog box to pause GUI and see solution before close
+        
+        Give option to run the algorithm again and return a variable depending on which button is pressed
         """
         # Get our control panel
-        self.__get_controls(200, 100)
+        self.__get_controls(200, 150)
         
         lbl = tk.Label(self.controls, text="Solved", font=("Arial",12))
         lbl.pack(ipady=10)
-    
-        # Add a button that will destroy itself when pressed
-        closeButton = tk.Button(self.controls, text="Close", width=15, height=2)
-        closeButton.config(command=closeButton.destroy)
-        closeButton.place(relx=0.5, rely=0.65, anchor="center")
+
+        # Add a button that will set a repeat variable and destroy the window
+        repeatButton = tk.Button(self.controls, text="Solve Again", width=15, height=2)
+        repeatButton.config(command=self.__repeat)
+        repeatButton.place(relx=0.5, rely=0.40, anchor="center")
         
-        # wait until button is destroyed
-        self.controls.wait_window(closeButton)
+        # Add a button that will destroy the window when pressed
+        closeButton = tk.Button(self.controls, text="Close", width=15, height=2)
+        closeButton.config(command=self.__close)
+        closeButton.place(relx=0.5, rely=0.75, anchor="center")
+        
+        # wait until window is destroyed
+        self.controls.wait_window(self.controls)
+        
+        return self.repeat

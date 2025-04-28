@@ -28,6 +28,20 @@ class ISolvable(ABC):
         """
         pass
     
+    def reset(self) -> None:
+        """Reset maze to initial state
+        """
+        
+        for y in range(self.height):
+            for x in range(self.width):
+                cell = self._get_cell((x,y))
+                cell.reset_solution()
+                
+                self.window.animator.queue_frame(cell.address, ("cell", "white"))
+            
+        self.path = []
+        self.window.animator.draw_pending()
+    
     def _get_neighbors(self, cell: Cell) -> list[Cell]:
         neighbors = []
         
