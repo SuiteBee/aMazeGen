@@ -12,8 +12,8 @@ class ISolvable(ABC):
         self.start_address = None
         self.finish_address = None
         
-        self.width = len(maze[0])
-        self.height = len(maze)
+        self.width = len(maze)
+        self.height = len(maze[0])
         
         self.visited = []
         self.solution = []

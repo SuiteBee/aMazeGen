@@ -34,17 +34,26 @@ class TkController:
             # Get our control panel
             self.__get_controls()
             
-            lbl = tk.Label(self.controls, text="Ready to start?", font=("Arial",12))
-            lbl.pack(ipady=10)
+            lbl = tk.Label(self.controls, text="Ready to start?", font=("Arial",24))
+            lbl.place(relx=0.5, rely=0.3, anchor="center")
+            
+            sld_lbl = tk.Label(self.controls, text="Time Step (ms)", font=("Arial",16))
+            sld_lbl.place(relx=0.5, rely=0.38, anchor="center")
             
             # Add a slider to select our timestep
-            slider = tk.Scale(self.controls, label="Time Step (ms)", font=("Arial",8), from_=1, to=500, orient=tk.HORIZONTAL, command=self.__set_timestep, variable=self.animator.timeStep)
-            slider.pack()
+            slider = tk.Scale(
+                self.controls, from_=1, to=500, length=250,
+                orient=tk.HORIZONTAL, 
+                command=self.__set_timestep, 
+                variable=self.animator.timeStep
+            )
+            
+            slider.place(relx=0.5, rely=0.45, anchor="center")
 
             # Add a button that will destroy itself when pressed
-            startButton = tk.Button(self.controls, text="Begin", width=15, height=2)
+            startButton = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
             startButton.config(command=startButton.destroy)         
-            startButton.place(relx=0.5, rely=0.75, anchor="center")
+            startButton.place(relx=0.5, rely=0.6, anchor="center")
             self.controls.update()
             self.btnCoords=(startButton.winfo_x(),startButton.winfo_y())
             
@@ -52,7 +61,10 @@ class TkController:
             self.controls.wait_window(startButton)
             
             # Create a pause button
-            self.pauseBtn = tk.Button(self.controls, text="Pause", width=15, height=2, command=self.__pause_anim)
+            self.pauseBtn = tk.Button(
+                self.controls, text="Pause", font=("Arial",16), 
+                width=18, height=2, command=self.__pause_anim
+            )
             self.pauseBtn.place(x=self.btnCoords[0], y=self.btnCoords[1])
 
     def finish_generation(self) -> None:
@@ -70,21 +82,29 @@ class TkController:
             self.__get_controls()
             
             # Add some text
-            line_one = tk.Label(self.controls, text="Finished Generating Maze", font=("Arial",18))
-            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",12))
-            
-            # Position text
-            line_one.pack(pady=(10, 0))
-            line_two.pack(ipady=0)
+            line_one = tk.Label(self.controls, text="Finished Generating", font=("Arial",24))
+            line_one.place(relx=0.5, rely=0.3, anchor="center")
+            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",16))
+            line_two.place(relx=0.5, rely=0.38, anchor="center")
         
             # Add a slider to select our timestep
-            slider = tk.Scale(self.controls, label="Time Step (ms)", font=("Arial",8), from_=1, to=500, orient=tk.HORIZONTAL, command=self.__set_timestep, variable=self.animator.timeStep)
-            slider.pack()
+            sld_lbl = tk.Label(self.controls, text="Time Step (ms)", font=("Arial",16))
+            sld_lbl.place(relx=0.5, rely=0.5, anchor="center")
+            
+            # Add a slider to select our timestep
+            slider = tk.Scale(
+                self.controls, from_=1, to=500, length=250,
+                orient=tk.HORIZONTAL, 
+                command=self.__set_timestep, 
+                variable=self.animator.timeStep
+            )
+            
+            slider.place(relx=0.5, rely=0.58, anchor="center")
 
             # Add a button that will destroy itself when pressed
-            startButton = tk.Button(self.controls, text="Begin", width=15, height=2)
+            startButton = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
             startButton.config(command=startButton.destroy)
-            startButton.place(relx=0.5, rely=0.75, anchor="center")
+            startButton.place(relx=0.5, rely=0.73, anchor="center")
             self.controls.update()
             self.btnCoords=(startButton.winfo_x(),startButton.winfo_y())
             
@@ -92,7 +112,10 @@ class TkController:
             self.controls.wait_window(startButton)
             
             # Create a pause button
-            self.pauseBtn = tk.Button(self.controls, text="Pause", width=15, height=2, command=self.__pause_anim)
+            self.pauseBtn = tk.Button(
+                self.controls, text="Pause", font=("Arial",16), 
+                width=18, height=2, command=self.__pause_anim
+            )
             self.pauseBtn.place(x=self.btnCoords[0],y=self.btnCoords[1])
         else:
             # Position elements WITHOUT timestep slider
@@ -100,17 +123,15 @@ class TkController:
             self.__get_controls()
             
             # Add some text
-            line_one = tk.Label(self.controls, text="Finished Generating Maze", font=("Arial",18))
-            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",12))
-
-            # Position text
-            line_one.pack(pady=(10, 0))
-            line_two.pack(ipady=0)
+            line_one = tk.Label(self.controls, text="Finished Generating", font=("Arial",24))
+            line_one.place(relx=0.5, rely=0.3, anchor="center")
+            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",16))
+            line_two.place(relx=0.5, rely=0.38, anchor="center")
             
             # Add a button that will destroy itself when pressed
-            startButton = tk.Button(self.controls, text="Begin", width=15, height=2)
+            startButton = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
             startButton.config(command=startButton.destroy)      
-            startButton.place(relx=0.5, rely=0.65, anchor="center")
+            startButton.place(relx=0.5, rely=0.55, anchor="center")
             
             # wait until button is destroyed
             self.controls.wait_window(startButton)
@@ -123,18 +144,18 @@ class TkController:
         # Get our control panel
         self.__get_controls()
         
-        lbl = tk.Label(self.controls, text="Solved", font=("Arial",12))
-        lbl.pack(ipady=10)
+        lbl = tk.Label(self.controls, text="Finished Solving", font=("Arial",24))
+        lbl.place(relx=0.5, rely=0.3, anchor="center")
 
         # Add a button that will set a repeat variable and destroy the window
-        repeatButton = tk.Button(self.controls, text="Solve Again", width=15, height=2)
+        repeatButton = tk.Button(self.controls, text="Solve Again", font=("Arial",16), width=18, height=2)
         repeatButton.config(command=self.__repeat)
-        repeatButton.place(relx=0.5, rely=0.40, anchor="center")
+        repeatButton.place(relx=0.5, rely=0.4, anchor="center")
         
         # Add a button that will destroy the window when pressed
-        closeButton = tk.Button(self.controls, text="Close", width=15, height=2)
+        closeButton = tk.Button(self.controls, text="Close", font=("Arial",16), width=18, height=2)
         closeButton.config(command=self.__close)
-        closeButton.place(relx=0.5, rely=0.75, anchor="center")
+        closeButton.place(relx=0.5, rely=0.5, anchor="center")
         
         # wait until window is destroyed
         self.controls.wait_window(self.controls)
@@ -145,11 +166,14 @@ class TkController:
         """Assign a new frame to house the controls
         """
         if self.controls is None:
-            self.controls = tk.Frame(self.window, width=300, height=500)
+            self.controls = tk.Frame(
+                self.window, width=350, height=500, 
+                highlightbackground="black", highlightthickness=3
+            )
             
             # Stop frame from resizing
             self.controls.pack_propagate(0)
-            self.controls.pack(side=tk.RIGHT, expand=True)
+            self.controls.pack(side=tk.RIGHT, fill=tk.Y, expand=True)
 
         elif len(self.controls.winfo_children()) > 0:
             for child in self.controls.winfo_children():
@@ -161,7 +185,7 @@ class TkController:
     def __pause_anim(self) -> None:
         """Create a continue button and place it above the pause button, wait until it is destroyed
         """
-        self.continueBtn = tk.Button(self.controls, text="Continue", width=15, height=2)
+        self.continueBtn = tk.Button(self.controls, text="Continue", font=("Arial",16), width=18, height=2)
         self.continueBtn.place(x=self.btnCoords[0], y=self.btnCoords[1])
         self.continueBtn.config(command=self.continueBtn.destroy)
         

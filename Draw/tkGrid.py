@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 
 from Draw.tkCell import TkCell
 
@@ -107,12 +106,11 @@ class TkGrid:
         canvas_height += self.frame_padding
 
         # Instantiate our canvas object with calculated dimensions and white background
-        tmp_canvas = tk.Canvas(root, width=canvas_width, height=canvas_height, bg="gray")
-        tmp_canvas.pack(side=tk.LEFT, expand=False)
-        
-        # Add a divider between the frames
-        divider = ttk.Separator(root, orient="vertical")
-        divider.pack(side=tk.LEFT, fill=tk.Y, padx=5)
+        tmp_canvas = tk.Canvas(
+            root, width=canvas_width, height=canvas_height, bg="gray",
+            highlightbackground="black", highlightthickness=3
+        )
+        tmp_canvas.pack(side=tk.LEFT, fill=tk.Y, expand=False)
         
         return tmp_canvas
     

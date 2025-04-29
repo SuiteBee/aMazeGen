@@ -15,7 +15,7 @@ height = 10
 start = (0, height-1)
 finish = (width-1, 0)
 
-animate = False
+animate = True
 
 output = TkController(width, height, animate)
 
