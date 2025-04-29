@@ -9,8 +9,8 @@ from Draw.tkController import TkController
 
 maze = None
 
-width = 30
-height = 10
+width = 50
+height = 50
 
 start = (0, height-1)
 finish = (width-1, 0)

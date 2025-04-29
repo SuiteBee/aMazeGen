@@ -7,9 +7,11 @@ class TkGrid:
         self.width = width
         self.height = height
 
-        # Relative window size (will adjust based on aspect)
-        self.target_width = 1000
-        self.target_height = 1000
+        # Physical screen dimensions in pixels
+        self.screen_size = self.__get_screen_size(root)
+        # Target is 70% of screen size before adjusting based on aspect
+        self.target_width = round(.7 * self.screen_size[0], 0)
+        self.target_height = round(.7 * self.screen_size[1], 0)
         
         # Extra space at edge of frame
         self.frame_padding = 80
@@ -76,6 +78,21 @@ class TkGrid:
         exitY2 = exit_pos[1]
         
         self.canvas.create_line(exitX1, exitY1, exitX2, exitY2, arrow=tk.LAST, fill="black", width=3)
+        
+    def __get_screen_size(self, root: tk.Tk) -> tuple[int,int]:
+        """Set to full screen, grab dimensions and set back
+        
+        Return a tuple with (width, height) in pixels
+        """
+        
+        root.update_idletasks()
+        root.attributes("-fullscreen", True)
+        dimensions = root.winfo_geometry().split("+")[0]
+        root.attributes("-fullscreen", False)
+        
+        screen_width = int(dimensions.split("x")[0])
+        screen_height = int(dimensions.split("x")[1])
+        return (screen_width, screen_height)
         
     def __get_canvas(self, root: tk.Tk) -> tk.Canvas:
         """Determine frame size based on target dimensions and aspect 

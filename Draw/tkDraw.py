@@ -15,7 +15,7 @@ class TkDraw:
         self.frame_queue: list[tuple[tuple[int,int],tuple[str,str]]] = []
         
         # Graphic representation of our maze
-        self.grid = TkGrid(self.window, width, height)
+        self.grid = TkGrid(root, width, height)
         
     def queue_frame(self, address: tuple[int,int], instruction: tuple[str,str]) -> None:
         """Append a cell alteration to a queue to be completed and emptied by calling draw_pending()
