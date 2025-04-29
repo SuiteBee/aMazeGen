@@ -49,7 +49,7 @@ class TkController:
                 command=self.__set_timestep, 
                 variable=self.animator.timeStep
             )
-            
+            slider.set(self.animator.timeStep)
             slider.place(relx=0.5, rely=0.45, anchor="center")
 
             # Add a button that will destroy itself when pressed
@@ -100,7 +100,7 @@ class TkController:
                 command=self.__set_timestep, 
                 variable=self.animator.timeStep
             )
-            
+            slider.set(self.animator.timeStep)
             slider.place(relx=0.5, rely=0.58, anchor="center")
 
             # Add a button that will destroy itself when pressed
