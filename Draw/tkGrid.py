@@ -1,22 +1,24 @@
 import tkinter as tk
+from tkinter import ttk
+
 from Draw.tkCell import TkCell
 
 class TkGrid:
-    def __init__(self, root, width, height):
+    def __init__(self, root: tk.Tk, width: int, height: int):
         self.width = width
         self.height = height
-        self.aspect = width/height
 
         # Relative window size (will adjust based on aspect)
         self.target_width = 1000
         self.target_height = 1000
         
-        # Extra space at edge of canvas
-        self.canvas_padding = 80
+        # Extra space at edge of frame
+        self.frame_padding = 80
+        # Outer cell padding
         self.cell_padding = 40
         
         # Cell size is determined by our final canvas size
-        self.cell_size = -1 
+        self.cell_size = -1
         # Shrink edge width for large grids
         self.edge_width = 1 if width + height > 100 else 3
               
@@ -64,48 +66,55 @@ class TkGrid:
         
         self.canvas.create_line(entryX1, entryY1, entryX2, entryY2, arrow=tk.LAST, fill="black", width=3)
         
-        # draw exit arrow
-        exitX1 = self.canvas.winfo_reqwidth() - self.cell_padding + self.cell_padding/4
-        exitY1 = self.canvas.winfo_reqheight() - self.cell_size/2 - self.cell_padding
-        exitX2 = self.canvas.winfo_reqwidth() - self.cell_padding/4
-        exitY2 = self.canvas.winfo_reqheight() - self.cell_size/2 - self.cell_padding
+        # Get our bottom right cell text (already at half height)
+        bottom_right: TkCell = self.cells[self.width - 1][0]
+        exit_pos = self.canvas.coords(bottom_right.text)
+
+        # Draw exit arrow
+        exitX1 = exit_pos[0] + self.cell_size/2 + self.cell_padding/4
+        exitY1 = exit_pos[1]
+        exitX2 = exit_pos[0] + self.cell_size/2 + self.cell_padding - self.cell_padding/4
+        exitY2 = exit_pos[1]
         
         self.canvas.create_line(exitX1, exitY1, exitX2, exitY2, arrow=tk.LAST, fill="black", width=3)
-
+        
     def __get_canvas(self, root: tk.Tk) -> tk.Canvas:
-        """Determine canvas size based on target dimensions and aspect 
-        
-        Use our calculated canvas dimensions to get cell size and add canvas to root(TK window)
+        """Determine frame size based on target dimensions and aspect 
         """
-        
+
+        aspect = self.width/self.height
         canvas_width = -1
         canvas_height = -1
         
         # Height is same or greater than width
-        if self.target_width / self.target_height >= self.aspect:
+        if self.target_width / self.target_height >= aspect:
             # Adjust width to allow only necessary amount of space
-            canvas_width = int(self.target_height * self.aspect)
+            canvas_width = int(self.target_height * aspect)
             canvas_height = self.target_height
 
             # Divide our canvas width by number of columns to get cell size
             # This will ensure our cells fit in the window bounds
-            self.cell_size = canvas_width / self.width 
+            self.cell_size = canvas_width / self.width
         # Width is greater than height
         else:
             canvas_width = self.target_width
-            canvas_height = int(self.target_width / self.aspect)
+            canvas_height = int(self.target_width / aspect)
 
             self.cell_size = canvas_height / self.height
             
         # Include some white space at the edges
-        canvas_width += self.canvas_padding
-        canvas_height += self.canvas_padding
+        canvas_width += self.frame_padding
+        canvas_height += self.frame_padding
 
         # Instantiate our canvas object with calculated dimensions and white background
-        tmpCanvas = tk.Canvas(root, width=canvas_width, height=canvas_height, bg="gray")
-        tmpCanvas.pack()
+        tmp_canvas = tk.Canvas(root, width=canvas_width, height=canvas_height, bg="gray")
+        tmp_canvas.pack(side=tk.LEFT, expand=False)
         
-        return tmpCanvas
+        # Add a divider between the frames
+        divider = ttk.Separator(root, orient="vertical")
+        divider.pack(side=tk.LEFT, fill=tk.Y, padx=5)
+        
+        return tmp_canvas
     
     def __generate_grid(self) -> list[list[TkCell]]:
         """Create a 2d list representation of our maze with TkCells

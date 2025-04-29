@@ -106,10 +106,10 @@ class ShellInterface:
             except ValueError as e: 
                 print(f"Error: {e}")
             
-            if tmpWidth > 9 and tmpWidth < 101:
+            if tmpWidth > 2 and tmpWidth < 501:
                 return tmpWidth
             else: 
-                print("Keep dimensions reasonable: valid input 10-100")
+                print("Keep dimensions reasonable: valid input 3-500")
 
     def __get_height(self) -> int:
         """Gather user input for maze height
@@ -122,10 +122,10 @@ class ShellInterface:
             except ValueError as e: 
                 print(f"Error: {e}")
             
-            if tmpHeight > 9 and tmpHeight < 101:
+            if tmpHeight > 2 and tmpHeight < 501:
                 return tmpHeight
             else: 
-                print("Keep dimensions reasonable: valid input 10-100")
+                print("Keep dimensions reasonable: valid input 3-500")
 
     def __get_gen(self) -> int:
         """Print contents of generate algorithm array and gather user input for selection

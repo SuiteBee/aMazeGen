@@ -1,7 +1,7 @@
 helpString = """
     Usage:
-        arg[0]: width (10-100)
-        arg[1]: height (10-100)
+        arg[0]: width (3-500)
+        arg[1]: height (3-500)
         arg[2]: generation method (1-3)
             1. Wilson's (slow)
             2. Prim's (linear)
@@ -37,13 +37,13 @@ class NoInterface:
         success = True
         msg = []
         
-        if str.isdigit(args[0]) and int(args[0]) >= 10 and int(args[0]) <= 100:
+        if str.isdigit(args[0]) and int(args[0]) >= 3 and int(args[0]) <= 500:
             self.width = int(args[0])
         else:
             success = False
             msg.append("arg[0]")
         
-        if str.isdigit(args[1]) and int(args[1]) >= 10 and int(args[1]) <= 100:
+        if str.isdigit(args[1]) and int(args[1]) >= 3 and int(args[1]) <= 500:
             self.height = int(args[1])
         else:
             success = False

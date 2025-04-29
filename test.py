@@ -9,8 +9,8 @@ from Draw.tkController import TkController
 
 maze = None
 
-width = 100
-height = 100
+width = 30
+height = 10
 
 start = (0, height-1)
 finish = (width-1, 0)
@@ -28,14 +28,14 @@ output.begin_generation()
 
 maze = gen.generate()
 
-output.isAnimated = True
-output.animator.isAnimated = True
+#output.isAnimated = True
+#output.animator.isAnimated = True
 
 while True:
     
     output.finish_generation()
 
-    solution = BFS(output, maze)   
+    solution = Best(output, maze)   
     solution.solve(start, finish)
 
     repeat = output.finish_solution()

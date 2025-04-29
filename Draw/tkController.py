@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from Draw.tkDraw import TkDraw
 
 class TkController:
@@ -11,9 +12,9 @@ class TkController:
         self.isAnimated = isAnimated
         self.animator = TkDraw(self.window, isAnimated, width, height)
         
-        # Top level canvas for animation controls
+        # Frame to house controls
         self.controls = None
-        
+
         # Pause switch tied to button press during animation
         self.pauseBtn = None
         self.continueBtn = None
@@ -21,50 +22,7 @@ class TkController:
         
         # Repeat switch tied to button press after solving
         self.repeat = False
-        
-    def __set_timestep(self, value: int) -> None:
-        self.animator.timeStep = value
-            
-    def __pause_anim(self) -> None:
-        """Create a continue button and place it above the pause button, wait until it is destroyed
-        """
-        self.continueBtn = tk.Button(self.controls, text="Continue", width=15, height=2)
-        self.continueBtn.place(x=self.btnCoords[0], y=self.btnCoords[1])
-        self.continueBtn.config(command=self.continueBtn.destroy)
-        
-        self.pauseBtn.lower(self.continueBtn)
-    
-        self.controls.wait_window(self.continueBtn)
-        
-    def __repeat(self) -> None:
-        """Set a loop variable to control output and reset the control panel
-        """
-     
-        self.repeat = True
-        self.controls.destroy()
-        self.controls = None
-        
-    def __close(self) -> bool:
-        """Stop loop and reset control panel
-        """
-        
-        self.repeat = False
-        self.controls.destroy()
-        self.controls = None
-        
-    def __get_controls(self, width: int, height: int) -> None:
-        """Create a second window if one doesn't already exist
-        """
-        if self.controls is None:
-            self.controls = tk.Toplevel(self.window)
-            self.controls.title("Controller")
-        elif len(self.controls.winfo_children()) > 0:
-            for child in self.controls.winfo_children():
-                child.destroy()
-                
-        self.controls.grab_set()
-        self.controls.geometry(f"{width}x{height}")
-        
+
     def begin_generation(self) -> None:
         """Show a dialog box to pause GUI and set animation timestep if applicable
         """
@@ -74,7 +32,7 @@ class TkController:
             self.window.update()
 
             # Get our control panel
-            self.__get_controls(200, 180)
+            self.__get_controls()
             
             lbl = tk.Label(self.controls, text="Ready to start?", font=("Arial",12))
             lbl.pack(ipady=10)
@@ -109,11 +67,11 @@ class TkController:
         if self.isAnimated:
             # Position elements WITH timestep slider
             # Get our control panel
-            self.__get_controls(250, 200)
+            self.__get_controls()
             
             # Add some text
-            line_one = tk.Label(self.controls, text="Finished Generating Maze", font=("Arial",12))
-            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",10))
+            line_one = tk.Label(self.controls, text="Finished Generating Maze", font=("Arial",18))
+            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",12))
             
             # Position text
             line_one.pack(pady=(10, 0))
@@ -139,11 +97,11 @@ class TkController:
         else:
             # Position elements WITHOUT timestep slider
             # Get our control panel
-            self.__get_controls(250, 150)
+            self.__get_controls()
             
             # Add some text
-            line_one = tk.Label(self.controls, text="Finished Generating Maze", font=("Arial",12))
-            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",10))
+            line_one = tk.Label(self.controls, text="Finished Generating Maze", font=("Arial",18))
+            line_two = tk.Label(self.controls, text="Ready to Solve?", font=("Arial",12))
 
             # Position text
             line_one.pack(pady=(10, 0))
@@ -163,7 +121,7 @@ class TkController:
         Give option to run the algorithm again and return a variable depending on which button is pressed
         """
         # Get our control panel
-        self.__get_controls(200, 150)
+        self.__get_controls()
         
         lbl = tk.Label(self.controls, text="Solved", font=("Arial",12))
         lbl.pack(ipady=10)
@@ -182,3 +140,47 @@ class TkController:
         self.controls.wait_window(self.controls)
         
         return self.repeat
+        
+    def __get_controls(self) -> None:
+        """Assign a new frame to house the controls
+        """
+        if self.controls is None:
+            self.controls = tk.Frame(self.window, width=300, height=500)
+            
+            # Stop frame from resizing
+            self.controls.pack_propagate(0)
+            self.controls.pack(side=tk.RIGHT, expand=True)
+
+        elif len(self.controls.winfo_children()) > 0:
+            for child in self.controls.winfo_children():
+                child.destroy()
+
+    def __set_timestep(self, value: int) -> None:
+        self.animator.timeStep = value
+            
+    def __pause_anim(self) -> None:
+        """Create a continue button and place it above the pause button, wait until it is destroyed
+        """
+        self.continueBtn = tk.Button(self.controls, text="Continue", width=15, height=2)
+        self.continueBtn.place(x=self.btnCoords[0], y=self.btnCoords[1])
+        self.continueBtn.config(command=self.continueBtn.destroy)
+        
+        self.pauseBtn.lower(self.continueBtn)
+    
+        self.controls.wait_window(self.continueBtn)
+        
+    def __repeat(self) -> None:
+        """Set a loop variable to control output and reset the control panel
+        """
+     
+        self.repeat = True
+        self.controls.destroy()
+        self.controls = None
+        
+    def __close(self) -> bool:
+        """Stop loop and reset control panel
+        """
+        
+        self.repeat = False
+        self.controls.destroy()
+        self.controls = None
