@@ -42,38 +42,44 @@ elif options.mGen == 2:
 elif options.mGen == 3:
     architect = Ellers(gui, options.width, options.height)
 
-# Tell our GUI we are ready to generate
-gui.begin_generation()
-
-# Generate method will return our maze as list[list[cell]]
-maze = architect.generate()
-
-# Set our start and end coordinates
-start = (0, options.height-1)
-finish = (options.width-1, 0)
-
-# Begin solution loop, will re-run solution until [close] button is pressed
-while True:
-   # Tell our GUI we have finished generating 
-    gui.finish_generation()
-
-    # Solution algorithm
-    pathfinder = None
-    if options.mSolve == 1:
-        pathfinder = DFS(gui, maze)
-    elif options.mSolve == 2:
-        pathfinder = BFS(gui, maze)
-    elif options.mSolve == 3:
-        pathfinder = Best(gui, maze) 
+# Handle application window closing
+try:
     
-    # Solve method will reutnr our solution as list[Cell]
-    solution = pathfinder.solve(start, finish)
+    # Tell our GUI we are ready to generate
+    gui.begin_generation()
 
-    # Tell our gui we have solved the maze
-    repeat = gui.finish_solution()
+    # Generate method will return our maze as list[list[cell]]
+    maze = architect.generate()
 
-    # Button press from above will determine if we solve again
-    if repeat:
-        pathfinder.reset()
-    else:
-        exit()
+    # Set our start and end coordinates
+    start = (0, options.height-1)
+    finish = (options.width-1, 0)
+
+    # Begin solution loop, will re-run solution until [close] button is pressed
+    while True:
+    # Tell our GUI we have finished generating 
+        gui.finish_generation()
+
+        # Solution algorithm
+        pathfinder = None
+        if options.mSolve == 1:
+            pathfinder = DFS(gui, maze)
+        elif options.mSolve == 2:
+            pathfinder = BFS(gui, maze)
+        elif options.mSolve == 3:
+            pathfinder = Best(gui, maze) 
+        
+        # Solve method will reutnr our solution as list[Cell]
+        solution = pathfinder.solve(start, finish)
+
+        # Tell our gui we have solved the maze
+        repeat = gui.finish_solution()
+
+        # Button press from above will determine if we solve again
+        if repeat:
+            pathfinder.reset()
+        else:
+            exit()
+
+except:
+    exit()

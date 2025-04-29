@@ -23,25 +23,28 @@ output = TkController(width, height, animate)
 #gen = Wilsons(output, width, height)
 gen = Ellers(output, width, height)
 
-# Tell our drawing class we are ready to generate
-output.begin_generation()
-
-maze = gen.generate()
-
-#output.isAnimated = True
-#output.animator.isAnimated = True
-
-while True:
+try:
     
-    output.finish_generation()
+    # Tell our drawing class we are ready to generate
+    output.begin_generation()
 
-    solution = Best(output, maze)   
-    solution.solve(start, finish)
+    maze = gen.generate()
 
-    repeat = output.finish_solution()
+    #output.isAnimated = True
+    #output.animator.isAnimated = True
 
-    if repeat:
-        solution.reset()
-    else:
-        exit()
+    while True:
+        output.finish_generation()
+
+        solution = Best(output, maze)   
+        solution.solve(start, finish)
+
+        repeat = output.finish_solution()
+
+        if repeat:
+            solution.reset()
+        else:
+            exit()
+except:
+    exit()
 

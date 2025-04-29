@@ -1,12 +1,14 @@
+import sys
 import tkinter as tk
-
 from Draw.tkDraw import TkDraw
 
 class TkController:
     def __init__(self, width: int, height: int, isAnimated: bool) -> None:
-        # Canvas that will store the maze
+        # Main root application window
         self.window = tk.Tk()
         self.window.title("Maze Generator")
+        self.window.protocol("WM_DELETE_WINDOW", self.__exit)
+        self.window.resizable(False, False)
         
         # Should we update the window after every operation
         self.isAnimated = isAnimated
@@ -16,9 +18,9 @@ class TkController:
         self.controls = None
 
         # Pause switch tied to button press during animation
-        self.pauseBtn = None
-        self.continueBtn = None
-        self.btnCoords = None
+        self.pause_btn = None
+        self.continue_btn = None
+        self.btn_coords = None
         
         # Repeat switch tied to button press after solving
         self.repeat = False
@@ -51,21 +53,21 @@ class TkController:
             slider.place(relx=0.5, rely=0.45, anchor="center")
 
             # Add a button that will destroy itself when pressed
-            startButton = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
-            startButton.config(command=startButton.destroy)         
-            startButton.place(relx=0.5, rely=0.6, anchor="center")
+            start_button = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
+            start_button.config(command=start_button.destroy)         
+            start_button.place(relx=0.5, rely=0.6, anchor="center")
             self.controls.update()
-            self.btnCoords=(startButton.winfo_x(),startButton.winfo_y())
+            self.btn_coords=(start_button.winfo_x(),start_button.winfo_y())
             
-            # wait until button is destroyed
-            self.controls.wait_window(startButton)
+            # Wait until start button is destroyed
+            self.controls.wait_window(start_button)
             
             # Create a pause button
-            self.pauseBtn = tk.Button(
+            self.pause_btn = tk.Button(
                 self.controls, text="Pause", font=("Arial",16), 
                 width=18, height=2, command=self.__pause_anim
             )
-            self.pauseBtn.place(x=self.btnCoords[0], y=self.btnCoords[1])
+            self.pause_btn.place(x=self.btn_coords[0], y=self.btn_coords[1])
 
     def finish_generation(self) -> None:
         """Show a dialog box to pause GUI and set animation timestep if applicable
@@ -102,21 +104,21 @@ class TkController:
             slider.place(relx=0.5, rely=0.58, anchor="center")
 
             # Add a button that will destroy itself when pressed
-            startButton = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
-            startButton.config(command=startButton.destroy)
-            startButton.place(relx=0.5, rely=0.73, anchor="center")
+            start_button = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
+            start_button.config(command=start_button.destroy)
+            start_button.place(relx=0.5, rely=0.73, anchor="center")
             self.controls.update()
-            self.btnCoords=(startButton.winfo_x(),startButton.winfo_y())
-            
-            # wait until button is destroyed
-            self.controls.wait_window(startButton)
+            self.btn_coords=(start_button.winfo_x(),start_button.winfo_y())
+    
+            # Wait until start button is destroyed
+            self.controls.wait_window(start_button)
             
             # Create a pause button
-            self.pauseBtn = tk.Button(
+            self.pause_btn = tk.Button(
                 self.controls, text="Pause", font=("Arial",16), 
                 width=18, height=2, command=self.__pause_anim
             )
-            self.pauseBtn.place(x=self.btnCoords[0],y=self.btnCoords[1])
+            self.pause_btn.place(x=self.btn_coords[0], y=self.btn_coords[1])
         else:
             # Position elements WITHOUT timestep slider
             # Get our control panel
@@ -129,12 +131,12 @@ class TkController:
             line_two.place(relx=0.5, rely=0.38, anchor="center")
             
             # Add a button that will destroy itself when pressed
-            startButton = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
-            startButton.config(command=startButton.destroy)      
-            startButton.place(relx=0.5, rely=0.55, anchor="center")
-            
-            # wait until button is destroyed
-            self.controls.wait_window(startButton)
+            start_button = tk.Button(self.controls, text="Begin", font=("Arial",16), width=18, height=2)
+            start_button.config(command=start_button.destroy)      
+            start_button.place(relx=0.5, rely=0.55, anchor="center")
+
+            # Wait until start button is destroyed
+            self.controls.wait_window(start_button)
         
     def finish_solution(self) -> bool:
         """Show a dialog box to pause GUI and see solution before close
@@ -148,17 +150,20 @@ class TkController:
         lbl.place(relx=0.5, rely=0.3, anchor="center")
 
         # Add a button that will set a repeat variable and destroy the window
-        repeatButton = tk.Button(self.controls, text="Solve Again", font=("Arial",16), width=18, height=2)
-        repeatButton.config(command=self.__repeat)
-        repeatButton.place(relx=0.5, rely=0.4, anchor="center")
+        repeat_button = tk.Button(self.controls, text="Solve Again", font=("Arial",16), width=18, height=2)
+        repeat_button.config(command=self.__repeat)
+        repeat_button.place(relx=0.5, rely=0.45, anchor="center")
         
         # Add a button that will destroy the window when pressed
-        closeButton = tk.Button(self.controls, text="Close", font=("Arial",16), width=18, height=2)
-        closeButton.config(command=self.__close)
-        closeButton.place(relx=0.5, rely=0.5, anchor="center")
+        close_button = tk.Button(self.controls, text="Close", font=("Arial",16), width=18, height=2)
+        close_button.config(command=self.__close)
+        close_button.place(relx=0.5, rely=0.65, anchor="center")
         
-        # wait until window is destroyed
-        self.controls.wait_window(self.controls)
+        # Create a trigger to pause execution until user interaction
+        button_press = tk.BooleanVar(self.controls, name="trigger", value=False)
+        
+        # Wait until trigger is fired
+        self.controls.wait_variable("trigger")
         
         return self.repeat
         
@@ -166,45 +171,62 @@ class TkController:
         """Assign a new frame to house the controls
         """
         if self.controls is None:
-            self.controls = tk.Frame(
-                self.window, width=350, height=500, 
+            # Outer frame to fill right side
+            outer = tk.Frame(self.window, width=350,
                 highlightbackground="black", highlightthickness=3
             )
+            outer.pack(side=tk.RIGHT, fill=tk.Y, expand=True)
             
+            # Inner frame that will not resize to keep widgets organized
+            self.controls = tk.Frame(outer, width=350, height=500)
             # Stop frame from resizing
             self.controls.pack_propagate(0)
-            self.controls.pack(side=tk.RIGHT, fill=tk.Y, expand=True)
+            self.controls.pack(side=tk.RIGHT, expand=True)
 
         elif len(self.controls.winfo_children()) > 0:
             for child in self.controls.winfo_children():
                 child.destroy()
 
-    def __set_timestep(self, value: int) -> None:
-        self.animator.timeStep = value
+    def __set_timestep(event, value: int) -> None:
+        """Set the animation timestep in milliseconds
+        """
+        event.animator.timeStep = value
             
-    def __pause_anim(self) -> None:
+    def __pause_anim(event) -> None:
         """Create a continue button and place it above the pause button, wait until it is destroyed
         """
-        self.continueBtn = tk.Button(self.controls, text="Continue", font=("Arial",16), width=18, height=2)
-        self.continueBtn.place(x=self.btnCoords[0], y=self.btnCoords[1])
-        self.continueBtn.config(command=self.continueBtn.destroy)
+        event.continue_btn = tk.Button(event.controls, text="Continue", font=("Arial",16), width=18, height=2)
+        event.continue_btn.place(x=event.btn_coords[0], y=event.btn_coords[1])
+        event.continue_btn.config(command=event.continue_btn.destroy)
         
-        self.pauseBtn.lower(self.continueBtn)
+        event.pause_btn.lower(event.continue_btn)
     
-        self.controls.wait_window(self.continueBtn)
+        event.controls.wait_window(event.continue_btn)
         
-    def __repeat(self) -> None:
-        """Set a loop variable to control output and reset the control panel
+    def __repeat(event) -> None:
+        """Set a loop variable
         """
-     
-        self.repeat = True
-        self.controls.destroy()
-        self.controls = None
+        event.__trigger()
+        event.repeat = True
         
-    def __close(self) -> bool:
-        """Stop loop and reset control panel
+    def __close(event) -> bool:
+        """Stop loop and close window
         """
+        event.__trigger()
+        event.repeat = False
         
-        self.repeat = False
-        self.controls.destroy()
-        self.controls = None
+        event.window.quit()
+        event.window.destroy()
+        
+    def __exit(event):
+        event.__trigger()
+        event.window.quit()
+        event.window.destroy()
+        
+    def __trigger(event) -> None:
+        # Try to set trigger if application is waiting, this will sometimes not exist
+        try:
+            val = event.controls.getvar("trigger")
+            event.controls.setvar("trigger", not val)
+        except:
+            pass
