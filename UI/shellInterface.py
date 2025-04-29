@@ -213,4 +213,4 @@ class ShellInterface:
             os.system("cls")
         else:
             print("clear_console unsupported on platform: " + sys.platform)
-            exit(1)
+            sys.exit(1)

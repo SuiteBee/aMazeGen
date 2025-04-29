@@ -79,7 +79,7 @@ try:
         if repeat:
             pathfinder.reset()
         else:
-            exit()
+            sys.exit()
 
 except:
-    exit()
+    sys.exit()

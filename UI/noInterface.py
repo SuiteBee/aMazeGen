@@ -1,3 +1,5 @@
+import sys 
+
 helpString = """
     Usage:
         arg[0]: width (3-500)
@@ -25,13 +27,13 @@ class NoInterface:
     def process(self, args: list[str]) -> None:
         if args[0] in ("help", "usage"):
             print(helpString)
-            exit()
+            sys.exit()
         elif len(args) == 5:
             self.validate(args)
         else:
             print("Argument Mismatch: All arguments are required")
             print(helpString)
-            exit()
+            sys.exit()
 
     def validate(self, args: list[str]) -> None:
         success = True
@@ -70,4 +72,4 @@ class NoInterface:
         if not success:
             print(f"Validation Error: {msg}")
             print(helpString)
-            exit()
+            sys.exit()
