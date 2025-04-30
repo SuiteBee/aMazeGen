@@ -73,7 +73,7 @@ In similar fashion, the cells that are a part of the maze are white and the fron
 
 This one was more difficult to implement. Eller's algorithm starts at the top and works row by row keeping track of connected sets as it goes. For the first row, every cell belongs to its own set. For each subsequent row it will randomly remove vertical walls between cells if they do not belong to the same set. If a wall is removed, the two sets are merged into one. For that same row it will then randomly remove the bottom wall maintaining that each set has at least one exit downwards. The cells below where the wall was removed will be added to that set and for the next row, cells without a set will become new sets. This will continue with each row until the last, where instead of randomly removing vertical walls it will remove the wall if the cells belong to disjointed sets so that all cells in the final row will be a part of one singular set.
 
-That is a lot to wrap your head around, but in its complexity are some benefits. This is the only algorithm that can generate endless mazes in linear time and even maintain its minimal memory requirements by only needing to keep track of the sets for the previous and current row. Trying to illustrate what is happening here is tricky, however I decided to color cells belonging to new sets red, cells that were an extension of a set pink and cells we no longer need to keep track of white.
+That is a lot to wrap your head around, but in its complexity are some benefits. This is the only algorithm that can generate endless mazes in linear time and even maintain its minimal memory requirements by only needing to keep track of the sets for the previous and current row. Trying to illustrate what is happening here is tricky, however I decided to color cells belonging to new sets red, cells that were an extension of a set pink and cells that are processed and completed white.
 
 ![ellers](https://github.com/user-attachments/assets/bb4c651a-6e11-495b-b59f-76ad523666fc)
 
@@ -83,9 +83,36 @@ I selected these particular solutions because the third algorithm is a nice comb
 
 ### Depth First Search
 
+This algorithm operates in an unweighted graph by traversing as far as it can go by choosing random directions when encountering an intersection. When it gets stuck in a dead end, the algorithm will backtrack and continue at the last intersection with an unvisited neighbor. The travel path here is colored red and cells that were visited, then backtracked will be colored pink
+
+![depth_first](https://github.com/user-attachments/assets/91e12dde-3538-4154-92c2-4343979c6410)
+
 ### Breadth First Search
 
+BFS operates much like Prim's in that it will expand from a starting point. This algorithm will expand in every direction that contains an unvisited cell until an exit is reached. For this animation I colored the visited cells pink and the "heads" of the travel paths red.
+
+![breadth_first](https://github.com/user-attachments/assets/e1fc12a4-9446-4ce4-951e-4b9f7b0d5295)
+
 ### Best First Search
+
+The final solution algorithm operates a little like both of the previous methods. It has a singular travel path like DFS, but can branch off in another direction like BFS. The determination of where it branches off is a heuristic based on cell distance from the exit. This algorithm starts by calculating the distance mentioned before of the current cells neighbors, then choosing the closest cell. It will do this in a continuous path until one of the previous encountered neighbors is closer than the current cells neighbors. It will then branch off and continue from that cell and repeat until the exit is reached. The current cell is colored red, the measured neighboring cells are colored yellow and visited cells are marked pink.
+
+![best_first](https://github.com/user-attachments/assets/a07c0948-c9a7-4c6c-9019-9a6e5ed014ea)
+
+# Scale
+
+This program can handle mazes of many sizes if the processing power is available, I decided to cap the width/height at a maximum of 500 with a minimum of 3. The program will lag a bit during startup at higher bounds due to the increased initialization that has to occur. I also setup the GUI so that it will scale the UI and cells to fit in a window that is 70% of the screen size its running on.
+
+![large_prims](https://github.com/user-attachments/assets/fe8c0932-d10c-4184-bc1b-6338ff187390)
+
+![large_best](https://github.com/user-attachments/assets/48808ac6-ea79-4c69-965e-aa7b25f4d2f6)
+
+# Asymmetric Dimensions
+
+The app will also handle asymmetric sizes and take into account the aspect of the dimensions provided to size the UI and cells accordingly
+
+![tall](https://github.com/user-attachments/assets/f3b26872-1acd-49df-b87a-175b307a9caf)
+
 
 # Review
 
