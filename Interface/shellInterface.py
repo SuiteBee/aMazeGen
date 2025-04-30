@@ -212,6 +212,9 @@ class ShellInterface:
             sys.exit(1)
             
     def __is_numeric(self, var) -> bool:
+        """Return TRUE if input is not empty and is numeric, print message if FALSE
+        """
+        
         if len(var) == 0:
             print("Please enter a value") 
         elif str.isdigit(var):
