@@ -46,7 +46,7 @@ elif options.mGen == 3:
 try:
     
     # Tell our GUI we are ready to generate
-    gui.begin_generation()
+    gui.begin_generation(architect)
 
     # Generate method will return our maze as list[list[cell]]
     maze = architect.generate()
@@ -57,8 +57,6 @@ try:
 
     # Begin solution loop, will re-run solution until [close] button is pressed
     while True:
-    # Tell our GUI we have finished generating 
-        gui.finish_generation()
 
         # Solution algorithm
         pathfinder = None
@@ -68,6 +66,9 @@ try:
             pathfinder = BFS(gui, maze)
         elif options.mSolve == 3:
             pathfinder = Best(gui, maze) 
+            
+        # Tell our GUI we have finished generating 
+        gui.finish_generation(pathfinder)
         
         # Solve method will reutnr our solution as list[Cell]
         solution = pathfinder.solve(start, finish)
@@ -81,5 +82,6 @@ try:
         else:
             sys.exit()
 
-except:
+except Exception as e:
+    #print(e)
     sys.exit()

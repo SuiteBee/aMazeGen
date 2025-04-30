@@ -39,8 +39,14 @@ class Wilsons(IGenerable):
             
             # Walk our path in reverse (set borders)
             self.__walk_back()
+            
+            # Clear out the frame queue (walls)
+            self.window.animator.draw_pending()
 
         return self.cells
+    
+    def name(self) -> str:
+        return "Wilson's"
 
     # Walk from random point to point in maze
     def __take_walk(self, src: tuple[int,int]) -> None:
@@ -52,12 +58,12 @@ class Wilsons(IGenerable):
         # Add our start to the path
         self.path.append(src)
         
+        # Mark our travel path red
+        self.window.animator.draw_frame(src, Instruction.CELL, Color.RED)
+        
         # Get next cell to add to path
         current = self.__take_step(src)
-        
-        # Mark our travel path red
-        self.window.animator.draw_frame(current, Instruction.CELL, Color.RED)
-        
+
         # Continue until we have reached the random point
         while current not in self.visited:
             # Loop Detected

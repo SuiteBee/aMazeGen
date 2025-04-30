@@ -48,6 +48,9 @@ class Ellers(IGenerable):
 
         return self.cells
     
+    def name(self) -> str:
+        return "Eller's"
+    
     def __get_cell_row(self, index) -> list[Cell]:
         """Get a row of cells (0 is bottom) and color them white
         """

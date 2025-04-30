@@ -24,6 +24,7 @@ class Prims(IGenerable):
         start = (random.randrange(self.width - 1), random.randrange(self.height - 1))
         self._add_cell(start)
         self.__expand_frontier(start)
+        self.window.animator.draw_pending()
         
         # Loop until all frontier cells are visited
         while len(self.unvisited) > 0:     
@@ -37,9 +38,16 @@ class Prims(IGenerable):
             # Add our next frontier cell to maze
             self._add_cell(frt)
             
+            # Expand frontier from new cell
             self.__expand_frontier(frt)
+            
+            # Clear out frame queue (frontier cells and walls)
+            self.window.animator.draw_pending()
         
         return self.cells
+    
+    def name(self) -> str:
+        return "Prim's"
         
     def __expand_frontier(self, address: tuple[int,int]) -> None:
         new_frontier = self.__get_neighbors(address)
@@ -51,9 +59,6 @@ class Prims(IGenerable):
             
                 # Cells within the frontier are denoted as red squares
                 self.window.animator.queue_frame(cell, Instruction.CELL, Color.RED)
-        
-        # Draw all of our expanded frontier cells at once
-        self.window.animator.draw_pending()
         
     def __get_neighbors(self, address: tuple[int,int]) -> list[tuple[int,int]]:
         """Return a list of neighboring cell coordinates that are within the maze bounds

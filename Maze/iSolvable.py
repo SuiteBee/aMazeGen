@@ -34,6 +34,12 @@ class ISolvable(ABC):
         """
         pass
     
+    @abstractmethod
+    def name(self) -> str:
+        """Returns name of algorithm
+        """
+        pass
+    
     def reset(self) -> None:
         """Reset maze to initial state
         """

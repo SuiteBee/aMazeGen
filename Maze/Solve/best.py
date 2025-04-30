@@ -41,6 +41,9 @@ class Best(ISolvable):
         
         return self.solution
     
+    def name(self) -> str:
+        return "Best First Search"
+    
     def _get_next(self) -> Cell:
         """Choose the next cell based on the distance from visited cell unvisited neighbors -> exit
         """

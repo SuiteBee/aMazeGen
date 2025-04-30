@@ -35,6 +35,12 @@ class IGenerable(ABC):
         """
         pass
     
+    @abstractmethod
+    def name(self) -> str:
+        """Returns name of algorithm
+        """
+        pass
+    
     def _fill_unvisited(self) -> list[(int,int)]:
         """Algorithms that keep track of unvisited cells will need an initial reference to all maze cells
         """
@@ -96,8 +102,6 @@ class IGenerable(ABC):
             
             self.window.animator.queue_frame(first, Instruction.BORDER, Border.LEFT)
             self.window.animator.queue_frame(second, Instruction.BORDER, Border.RIGHT)
-            
-        self.window.animator.draw_pending()
         
     def __get_direction(self, first: tuple[int,int], second: tuple[int,int]) -> int:      
         """Return an index for the direction of travel between first (x,y) and second (x,y)

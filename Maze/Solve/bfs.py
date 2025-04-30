@@ -39,6 +39,9 @@ class BFS(ISolvable):
         
         return self.solution
     
+    def name(self) -> str:
+        return "Breadth First Search"
+    
     def __expand_search(self, cell: Cell) -> None:
         """Visit all unvisited neighbors of cell and record cell as their parent
         """

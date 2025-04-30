@@ -104,15 +104,13 @@ class ShellInterface:
         
         while True:
             tmpWidth = input("Enter a width for the generated maze: ")
-            try:
-                tmpWidth = int(tmpWidth)
-            except ValueError as e: 
-                print(f"Error: {e}")
             
-            if tmpWidth > 2 and tmpWidth < 501:
-                return tmpWidth
-            else: 
-                print("Keep dimensions reasonable: valid input 3-500")
+            if self.__is_numeric(tmpWidth):
+                tmpWidth = int(tmpWidth)
+                if tmpWidth > 2 and tmpWidth < 501:
+                    return tmpWidth
+                else: 
+                    print("Keep dimensions reasonable: valid input 3-500")
 
     def __get_height(self) -> int:
         """Gather user input for maze height
@@ -120,15 +118,14 @@ class ShellInterface:
         
         while True:
             tmpHeight = input("Enter a height for the generated maze: ")
-            try:
-                tmpHeight = int(tmpHeight)
-            except ValueError as e: 
-                print(f"Error: {e}")
             
-            if tmpHeight > 2 and tmpHeight < 501:
-                return tmpHeight
-            else: 
-                print("Keep dimensions reasonable: valid input 3-500")
+            if self.__is_numeric(tmpHeight):
+                tmpHeight = int(tmpHeight)
+                if tmpHeight > 2 and tmpHeight < 501:
+                    return tmpHeight
+                else: 
+                    print("Keep dimensions reasonable: valid input 3-500")
+
 
     def __get_gen(self) -> int:
         """Print contents of generate algorithm array and gather user input for selection
@@ -140,15 +137,13 @@ class ShellInterface:
             
         while True:
             tmpGen = input("Enter your selection: ")
-            try:
-                tmpGen = int(tmpGen)
-            except ValueError as e:
-                print(f"Error: {e}")
             
-            if tmpGen in(1,2,3):
-                return tmpGen
-            else:
-                print("Choose one of the available options: valid input 1-3")
+            if self.__is_numeric(tmpGen):
+                tmpGen = int(tmpGen)
+                if tmpGen in(1,2,3):
+                    return tmpGen
+                else:
+                    print("Choose one of the available options: valid input 1-3")
             
     def __get_solve(self) -> int:
         """Print contents of solution algorithm array and gather user input for selection
@@ -161,32 +156,30 @@ class ShellInterface:
             
         while True:
             tmpSolve = input("Enter your selection: ")
-            try:
-                tmpSolve = int(tmpSolve)
-            except ValueError as e:
-                print(f"Error: {e}")
             
-            if tmpSolve in (1,2,3):
-                return tmpSolve
-            else:
-                print("Choose one of the available options: valid input 1-3")
+            if self.__is_numeric(tmpSolve):
+                tmpSolve = int(tmpSolve)
+                if tmpSolve in (1,2,3):
+                    return tmpSolve
+                else:
+                    print("Choose one of the available options: valid input 1-3")
                 
     def __get_animate(self) -> bool:
         """Gather user input for mAnimate
         """
         while True:
             tmpAnimate = input("Would you like to animate the generation and solution? Y(es)/N(o):")
-            try:
+                
+            if len(tmpAnimate) > 0:
                 tmpAnimate = tmpAnimate.upper()
-            except ValueError as e:
-                print(f"Error: {e}")
-            
-            if tmpAnimate in ("Y", "YES"):
-                return True
-            elif tmpAnimate in ("N", "NO"):
-                return False
+                if tmpAnimate in ("Y", "YES"):
+                    return True
+                elif tmpAnimate in ("N", "NO"):
+                    return False
+                else:
+                    print("Enter a valid selection: valid input y/yes/n/no")
             else:
-                print("Enter a valid selection: valid input y/n")
+                print("Please enter a value") 
             
     def __selection_required(self) -> bool:
         """Determines if all required inputs have been collected
@@ -217,3 +210,13 @@ class ShellInterface:
         else:
             print("clear_console unsupported on platform: " + sys.platform)
             sys.exit(1)
+            
+    def __is_numeric(self, var) -> bool:
+        if len(var) == 0:
+            print("Please enter a value") 
+        elif str.isdigit(var):
+            return True
+        else:
+            print("Must enter a numeric value")
+            
+        return False

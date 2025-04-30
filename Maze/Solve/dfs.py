@@ -38,6 +38,9 @@ class DFS(ISolvable):
         
         return self.solution
     
+    def name(self) -> str:
+        return "Depth First Search"
+    
     def __get_solution(self) -> list[Cell]:
         """Color and return a list of cells in our path
         """
