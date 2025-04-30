@@ -8,9 +8,9 @@ from Maze.Solve.dfs import DFS
 from Maze.Solve.bfs import BFS
 from Maze.Solve.best import Best
 
-from UI.noInterface import NoInterface
-from UI.shellInterface import ShellInterface
-from Draw.tkController import TkController
+from Interface.noInterface import NoInterface
+from Interface.shellInterface import ShellInterface
+from Interface.GUI.tkController import TkController
 
 # Determine whether to open the interactive shell or run with command line arguments
 if len(sys.argv) - 1 > 0:

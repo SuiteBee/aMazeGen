@@ -1,9 +1,17 @@
-from Maze.iGenerable import IGenerable
-from Maze.cell import Cell
-from Draw.tkController import TkController
 import random
 
+from Maze.iGenerable import IGenerable
+from Maze.cell import Cell
+from Utility.enums import Instruction
+from Utility.enums import Color
+from Interface.GUI.tkController import TkController
+
 class Wilsons(IGenerable):
+    """Implementation of Wilsons's maze generation algorithm
+    
+    Builds a maze by taking random walks from arbitrary cells back to cells in the maze
+    """
+    
     def __init__(self, output: TkController, width, height):
         super().__init__(output, width, height)
         
@@ -48,7 +56,7 @@ class Wilsons(IGenerable):
         current = self.__take_step(src)
         
         # Mark our travel path red
-        self.window.animator.draw_frame(current, ("cell", "red"))
+        self.window.animator.draw_frame(current, Instruction.CELL, Color.RED)
         
         # Continue until we have reached the random point
         while current not in self.visited:
@@ -59,13 +67,13 @@ class Wilsons(IGenerable):
                     removed = self.path.pop()
                     
                     # Restore our backtracked cells to the original black color
-                    self.window.animator.draw_frame(removed, ("cell", "black"))
+                    self.window.animator.draw_frame(removed, Instruction.CELL, Color.BLACK)
             else:
                 # Path is valid continue from current
                 self.path.append(current)
                 
                 # Mark our travel path red
-                self.window.animator.draw_frame(current, ("cell", "red"))
+                self.window.animator.draw_frame(current, Instruction.CELL, Color.RED)
                 
             # Get next cell to add to path
             current = self.__take_step(current)
@@ -79,7 +87,7 @@ class Wilsons(IGenerable):
         Call is recursive until we find a valid direction to go
         """
         
-        travel = random.choice(self.directions)
+        travel = random.choice(self.dir_coords)
         
         nextCellX = src[0] + travel[0]
         nextCellY = src[1] + travel[1]

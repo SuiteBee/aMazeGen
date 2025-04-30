@@ -1,8 +1,15 @@
 from Maze.iSolvable import ISolvable
+from Utility.enums import Instruction
+from Utility.enums import Color
 from Maze.cell import Cell
-from Draw.tkController import TkController
+from Interface.GUI.tkController import TkController
 
 class BFS(ISolvable):
+    """Breadth First Search implementation
+    
+    Solves by visiting neighbors of cells in the path first
+    """
+    
     def __init__(self, output: TkController, maze: list[list[Cell]]):
         super().__init__(output, maze)
         
@@ -28,27 +35,9 @@ class BFS(ISolvable):
         # Extract the shortest path
         first_cell = self._get_cell(self.start_address)
         last_cell = self._get_cell(self.finish_address)
-        self.solution = self.__get_shortest_path(first_cell, last_cell)
+        self.solution = self._get_shortest_path(first_cell, last_cell)
         
         return self.solution
-    
-    def __get_shortest_path(self, first_cell: Cell, last_cell: Cell) -> list[Cell]:
-        """Color and return a chain of cells from first to last connected by Cell.parent property
-        """
-        
-        shortest_path = []
-        while last_cell.address != first_cell.address:
-            # Add our last cell to the path and color it green
-            shortest_path.insert(0, last_cell)
-            self.window.animator.queue_frame(last_cell.address, ("cell", "green"))
-
-            # Set our last cell to be its parent (where it came from)
-            last_cell = self._get_cell(last_cell.parent)
-            
-        self.window.animator.queue_frame(first_cell.address, ("cell", "green"))
-        self.window.animator.draw_pending()
-        
-        return shortest_path
     
     def __expand_search(self, cell: Cell) -> None:
         """Visit all unvisited neighbors of cell and record cell as their parent
@@ -60,7 +49,7 @@ class BFS(ISolvable):
             self.__visit(unv, cell)
       
         # Color our examined cell pink as it is no longer at the forefront of the search
-        self.window.animator.queue_frame(cell.address, ("cell", "pink"))
+        self.window.animator.queue_frame(cell.address, Instruction.CELL, Color.PINK)
                     
 
     def __visit(self, cell: Cell, origin: Cell):
@@ -71,4 +60,4 @@ class BFS(ISolvable):
         self.path.insert(0, cell.address)
         
         # Color our cell red to denote it is the next cell to be examined
-        self.window.animator.queue_frame(cell.address, ("cell", "red"))
+        self.window.animator.queue_frame(cell.address, Instruction.CELL, Color.RED)

@@ -1,8 +1,14 @@
 from abc import ABC, abstractmethod
+
 from Maze.cell import Cell
-from Draw.tkController import TkController
+from Utility.enums import Instruction
+from Utility.enums import Color
+from Interface.GUI.tkController import TkController
 
 class ISolvable(ABC):
+    """Solves a given matrix of cells containing information about their borders
+    """
+    
     def __init__(self, output: TkController, maze: list[list[Cell]]):
         """Maze is a 2d list of Cell
         isAnimated will introduce a timestep to visualize the solution of the maze
@@ -37,10 +43,28 @@ class ISolvable(ABC):
                 cell = self._get_cell((x,y))
                 cell.reset_solution()
                 
-                self.window.animator.queue_frame(cell.address, ("cell", "white"))
+                self.window.animator.queue_frame(cell.address, Instruction.CELL, Color.WHITE)
             
         self.path = []
         self.window.animator.draw_pending()
+        
+    def _get_shortest_path(self, first_cell: Cell, last_cell: Cell) -> list[Cell]:
+        """Color and return a chain of cells from first to last connected by Cell.parent property
+        """
+        
+        shortest_path = []
+        while last_cell.address != first_cell.address:
+            # Add our last cell to the path and color it green
+            shortest_path.insert(0, last_cell)
+            self.window.animator.queue_frame(last_cell.address, Instruction.CELL, Color.GREEN)
+
+            # Set our last cell to be its parent (where it came from)
+            last_cell = self._get_cell(last_cell.parent)
+            
+        self.window.animator.queue_frame(first_cell.address, Instruction.CELL, Color.GREEN)
+        self.window.animator.draw_pending()
+        
+        return shortest_path
     
     def _get_neighbors(self, cell: Cell) -> list[Cell]:
         neighbors = []

@@ -1,14 +1,22 @@
 import tkinter as tk
-
-from Draw.tkCell import TkCell
+from Utility.enums import Instruction
+from Utility.enums import Border
+from Interface.GUI.tkCell import TkCell
 
 class TkGrid:
+    """Manages all things dealing with the displayed maze such as generating and 
+    altering cells as well as reversing the y-axis so point 0,0 is in the bottom left
+    
+    Application window size is determined here based on input dimensions
+    """
+    
     def __init__(self, root: tk.Tk, width: int, height: int):
         self.width = width
         self.height = height
 
         # Physical screen dimensions in pixels
         self.screen_size = self.__get_screen_size(root)
+        
         # Target is 70% of screen size before adjusting based on aspect
         self.target_width = round(.7 * self.screen_size[0], 0)
         self.target_height = round(.7 * self.screen_size[1], 0)
@@ -26,38 +34,33 @@ class TkGrid:
         self.canvas = self.__get_canvas(root)
         self.cells = self.__generate_grid()
         
-    def modify(self, address: tuple[int,int], instruction: tuple[str,str]) -> None:
+    def modify(self, address: tuple[int,int], part: Instruction, data) -> None:
         """Perform instruction operation on cell at address(x,y)
         
         This can color the cell face, hide a specified border or add text
         
         Usage 
-            modify((x,y), ("cell", "red"))
-            modify((x,y), ("border", "top/bottom/left/right"))
-            modify((x,y), ("text", "str"))
+            modify((x,y), INSTRUCTION.CELL, Color.RED)
+            modify((x,y), INSTRUCTION.BORDER, Border.TOP/BOTTOM/LEFT/RIGHT)
+            modify((x,y), INSTRUCTION.TEXT, "str")
         """
         x = address[0]
         y = address[1]
         
-        part = instruction[0]
-
-        if part == "cell":
-            color = instruction[1]
-            self.cells[x][y].set_color(self.canvas, color)
-        elif part == "border":
-            border = instruction[1]
-            self.cells[x][y].remove_border(self.canvas, border)
-        elif part == "text":
-            text = instruction[1]
-            self.cells[x][y].add_text(self.canvas, text)
+        if part == Instruction.CELL:
+            self.cells[x][y].set_color(self.canvas, data)
+        elif part == Instruction.BORDER:
+            self.cells[x][y].remove_border(self.canvas, data)
+        elif part == Instruction.TEXT:
+            self.cells[x][y].add_text(self.canvas, data)
             
     def open(self) -> None:
         """Open entry/exit cells and draw arrow
         """
 
         # Set entry and exit (top left, bottom right)
-        self.modify((0, self.height - 1), ("border", "left"))
-        self.modify((self.width - 1, 0), ("border", "right"))
+        self.modify((0, self.height - 1), Instruction.BORDER, Border.LEFT)
+        self.modify((self.width - 1, 0), Instruction.BORDER, Border.RIGHT)
         
         # Draw entry arrow
         entryX1 = self.cell_padding/4

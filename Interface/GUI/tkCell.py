@@ -1,12 +1,13 @@
 import tkinter as tk
+from Utility.enums import Border
+from Utility.enums import Color
 
 class TkCell:
-    """Object to store all drawn property ID's of a single cell
+    """Class to manage all displayed properties of a single cell
     """
     
     def __init__(self, cell: int, top: int, bottom: int, left: int, right: int, text: int) -> None:
-        """Object to store all drawn property ID's of a single cell
-
+        """
         Args:
             cell (int): ID for cell face
             top (int): ID for top border
@@ -23,29 +24,29 @@ class TkCell:
         self.right = right
         self.text = text
         
-    def set_color(self, canvas: tk.Canvas, color: str):
+    def set_color(self, canvas: tk.Canvas, color: Color):
         """Set the face color of this cell
 
         Args:
             canvas (tk.Canvas): Canvas the cell resides in
-            color (str): Color to use
+            color (Enum): Color to use
         """
-        canvas.itemconfig(self.cell, fill=color)
+        canvas.itemconfig(self.cell, fill=color.value)
         
-    def remove_border(self, canvas: tk.Canvas, border: str):
+    def remove_border(self, canvas: tk.Canvas, border: Border):
         """Delete a single border from the cell residing within canvas
 
         Args:
             canvas (tk.Canvas): Canvas the cell resides in
-            border (str): Border to delete (top/bottom/left/right)
+            border (Enum): Border to delete (TOP/BOTTOM/LEFT/RIGHT)
         """
-        if border == "top":
+        if border == Border.TOP:
             canvas.delete(self.top)
-        elif border == "bottom":
+        elif border == Border.BOTTOM:
             canvas.delete(self.bottom)
-        elif border == "left":
+        elif border == Border.LEFT:
             canvas.delete(self.left)
-        elif border == "right":
+        elif border == Border.RIGHT:
             canvas.delete(self.right)
             
     def add_text(self, canvas: tk.Canvas, text: str):

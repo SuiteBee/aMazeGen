@@ -1,8 +1,15 @@
 from Maze.iSolvable import ISolvable
+from Utility.enums import Instruction
+from Utility.enums import Color
 from Maze.cell import Cell
-from Draw.tkController import TkController
+from Interface.GUI.tkController import TkController
 
 class Best(ISolvable):
+    """Best First Search implementation
+    
+    Utilizes a heuristic approach to solve by visiting cells with the shortest distance from the exit first 
+    """
+    
     def __init__(self, output: TkController, maze: list[list[Cell]]):
         super().__init__(output, maze)
         
@@ -22,7 +29,7 @@ class Best(ISolvable):
             next_cell = self._get_next()   
             
             # Color old cells pink
-            self.window.animator.draw_frame(current_cell.address, ("cell", "pink"))
+            self.window.animator.draw_frame(current_cell.address, Instruction.CELL, Color.PINK)
             
             # Set our next cell to current
             current_cell = next_cell
@@ -30,27 +37,9 @@ class Best(ISolvable):
         # Extract the shortest path
         first_cell = self._get_cell(self.start_address)
         last_cell = self._get_cell(self.finish_address)
-        self.solution = self.__get_shortest_path(first_cell, last_cell)
+        self.solution = self._get_shortest_path(first_cell, last_cell)
         
         return self.solution
-    
-    def __get_shortest_path(self, first_cell: Cell, last_cell: Cell) -> list[Cell]:
-        """Color and return a chain of cells from first to last connected by Cell.parent property
-        """
-        
-        shortest_path = []
-        while last_cell.address != first_cell.address:
-            # Add our last cell to the path and color it green
-            shortest_path.insert(0, last_cell)
-            self.window.animator.queue_frame(last_cell.address, ("cell", "green"))
-
-            # Set our last cell to be its parent (where it came from)
-            last_cell = self._get_cell(last_cell.parent)
-            
-        self.window.animator.queue_frame(first_cell.address, ("cell", "green"))
-        self.window.animator.draw_pending()
-        
-        return shortest_path
     
     def _get_next(self) -> Cell:
         """Choose the next cell based on the distance from visited cell unvisited neighbors -> exit
@@ -114,13 +103,13 @@ class Best(ISolvable):
         # First visit, color cell red and add to path
         cell.visited = True
         self.path.append(cell.address)
-        self.window.animator.draw_frame(cell.address, ("cell", "red"))
+        self.window.animator.draw_frame(cell.address, Instruction.CELL, Color.RED)
         
         # Get all unvisited neighbors of cell
         unv_neighbors = [neighbor for neighbor in self._get_neighbors(cell) if not neighbor.visited]
         
         # Color neighbors yellow
         for neighbor in unv_neighbors or []:
-            self.window.animator.queue_frame(neighbor.address, ("cell", "yellow"))
+            self.window.animator.queue_frame(neighbor.address, Instruction.CELL, Color.YELLOW)
         
         self.window.animator.draw_pending()

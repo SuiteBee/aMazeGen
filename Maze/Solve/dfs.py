@@ -1,9 +1,17 @@
-from Maze.iSolvable import ISolvable
-from Maze.cell import Cell
-from Draw.tkController import TkController
 import random
 
+from Maze.iSolvable import ISolvable
+from Utility.enums import Instruction
+from Utility.enums import Color
+from Maze.cell import Cell
+from Interface.GUI.tkController import TkController
+
 class DFS(ISolvable):
+    """Depth First Search implementation
+    
+    Randomly visits cells as far as it can go and then backtracks when stuck
+    """
+    
     def __init__(self, output: TkController, maze: list[list[Cell]]):
         super().__init__(output, maze)
         
@@ -37,7 +45,7 @@ class DFS(ISolvable):
         shortest_path = []
         while len(self.path) > 0:
             address = self.path.pop(0)
-            self.window.animator.queue_frame(address, ("cell", "green"))
+            self.window.animator.queue_frame(address, Instruction.CELL, Color.GREEN)
             
             cell = self._get_cell(address)
             shortest_path.append(cell)
@@ -74,10 +82,10 @@ class DFS(ISolvable):
             # First visit add to path and color red
             cell.visited = True
             self.path.append(cell.address)
-            self.window.animator.draw_frame(cell.address, ("cell", "red"))
+            self.window.animator.draw_frame(cell.address, Instruction.CELL, Color.RED)
         elif has_unv_neighbors:
             # Backtrack to search unvisited neighbors add to path
             self.path.append(cell.address)
         else:
             # Backtrack and no unvisited neighbors remain color pink (searched path)
-           self.window.animator.draw_frame(cell.address, ("cell", "pink"))
+           self.window.animator.draw_frame(cell.address, Instruction.CELL, Color.PINK)

@@ -33,6 +33,9 @@ solveAlgorithms = [
 ]
 
 class ShellInterface:
+    """Shell interface to guide user when no command line arguments are supplied
+    """
+    
     def __init__(self) -> None:
         self.width = 0
         self.height = 0

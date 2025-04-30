@@ -16,6 +16,9 @@ helpString = """
     """
             
 class NoInterface:
+    """Interface skip to allow command line execution with given arguments
+    """
+    
     def __init__(self) -> None:
         self.width = 0
         self.height = 0

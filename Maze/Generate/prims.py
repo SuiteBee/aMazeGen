@@ -1,9 +1,17 @@
-from Maze.iGenerable import IGenerable
-from Maze.cell import Cell
-from Draw.tkController import TkController
 import random
 
+from Maze.iGenerable import IGenerable
+from Utility.enums import Instruction
+from Utility.enums import Color
+from Maze.cell import Cell
+from Interface.GUI.tkController import TkController
+
 class Prims(IGenerable):
+    """Implementation of Prim's maze generation algorithm
+    
+    Starts at a single point and randomly expands to unvisited neighbor cells (frontier) until all cells are visited
+    """
+    
     def __init__(self, output: TkController, width, height):
         super().__init__(output, width, height)
         
@@ -42,7 +50,7 @@ class Prims(IGenerable):
                 self.unvisited.append(cell)
             
                 # Cells within the frontier are denoted as red squares
-                self.window.animator.queue_frame(cell, ("cell", "red"))
+                self.window.animator.queue_frame(cell, Instruction.CELL, Color.RED)
         
         # Draw all of our expanded frontier cells at once
         self.window.animator.draw_pending()
@@ -54,7 +62,7 @@ class Prims(IGenerable):
         neighbors = []
         
         # For every possible direction from address
-        for direction in self.directions:
+        for direction in self.dir_coords:
             neighborX = address[0] + direction[0]
             neighborY = address[1] + direction[1]
             
@@ -67,7 +75,7 @@ class Prims(IGenerable):
     def __get_visited_neighbor(self, address: tuple[int,int]) -> tuple[int,int]:
         """Return random neighboring cell that is part of the maze
         """
-        
+             
         # Get neighbors of cell at address
         neighbors = self.__get_neighbors(address)
         

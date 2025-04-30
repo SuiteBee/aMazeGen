@@ -1,8 +1,10 @@
-import sys
 import tkinter as tk
-from Draw.tkDraw import TkDraw
+from Interface.GUI.tkDraw import TkDraw
 
 class TkController:
+    """Root class to control application events and update the control panel
+    """
+    
     def __init__(self, width: int, height: int, isAnimated: bool) -> None:
         # Main root application window
         self.window = tk.Tk()

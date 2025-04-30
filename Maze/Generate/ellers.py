@@ -1,9 +1,18 @@
-from Maze.iGenerable import IGenerable
-from Maze.cell import Cell
-from Draw.tkController import TkController
 import random
 
+from Maze.iGenerable import IGenerable
+from Maze.cell import Cell
+from Utility.enums import Instruction
+from Utility.enums import Border
+from Utility.enums import Color
+from Interface.GUI.tkController import TkController
+
 class Ellers(IGenerable):
+    """Implementation of Eller's maze generation algorithm
+    
+    Builds maze one row at a time from top to bottom by joining and keeping track of sets
+    """
+    
     def __init__(self, output: TkController, width, height):
         super().__init__(output, width, height)
 
@@ -71,7 +80,7 @@ class Ellers(IGenerable):
                 # Can be merged with another set in later step
                 new_path = [cell.address]
                 self.set_paths.append(new_path)
-                self.window.animator.draw_frame(cell.address, ("cell", "red"))
+                self.window.animator.draw_frame(cell.address, Instruction.CELL, Color.RED)
             
     def __clean_path(self, row: list[Cell]) -> None:
         """Remove cells from paths that can no longer expand downwards
@@ -83,7 +92,7 @@ class Ellers(IGenerable):
                 existing_path = self.__get_path(cell)
                 existing_path.remove(cell.address)
             
-            self.window.animator.queue_frame(cell.address, ("cell", "white"))
+            self.window.animator.queue_frame(cell.address, Instruction.CELL, Color.WHITE)
             
         self.window.animator.draw_pending()
             
@@ -95,8 +104,8 @@ class Ellers(IGenerable):
         path.remove(toRemove.address)
         path.append(toAdd.address)
         
-        self.window.animator.queue_frame(toAdd.address, ("cell", "pink"))
-        self.window.animator.queue_frame(toRemove.address, ("cell", "white"))
+        self.window.animator.queue_frame(toAdd.address, Instruction.CELL, Color.PINK)
+        self.window.animator.queue_frame(toRemove.address, Instruction.CELL, Color.WHITE)
         self.window.animator.draw_pending()
         
         
@@ -114,7 +123,7 @@ class Ellers(IGenerable):
         
         for address in combined:
             # The following is queued to color cell and remove borders at the same time
-            self.window.animator.queue_frame((address[0], address[1]), ("cell", "white"))
+            self.window.animator.queue_frame((address[0], address[1]), Instruction.CELL, Color.WHITE)
             
         self.window.animator.draw_pending()
         
@@ -160,8 +169,8 @@ class Ellers(IGenerable):
             cell.right = 0
             neighbor.left = 0
             
-            self.window.animator.queue_frame(cell.address, ("border", "right"))
-            self.window.animator.queue_frame(neighbor.address, ("border", "left"))
+            self.window.animator.queue_frame(cell.address, Instruction.BORDER, Border.RIGHT)
+            self.window.animator.queue_frame(neighbor.address, Instruction.BORDER, Border.LEFT)
 
         return remove_right
                  
@@ -199,8 +208,8 @@ class Ellers(IGenerable):
             cell.bottom = 0
             neighbor.top = 0
         
-            self.window.animator.queue_frame(cell.address, ("border", "bottom"))
-            self.window.animator.queue_frame(neighbor.address, ("border", "top"))
+            self.window.animator.queue_frame(cell.address, Instruction.BORDER, Border.BOTTOM)
+            self.window.animator.queue_frame(neighbor.address, Instruction.BORDER, Border.TOP)
 
         return remove_bottom
         
