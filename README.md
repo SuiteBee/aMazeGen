@@ -55,9 +55,27 @@ I chose these based on what I thought looked the most interesting to watch in ac
 
 ### Wilson's
 
+This algorithm generates a maze by selecting an arbitrary cell and marking it visited (part of the maze). It then selects a second arbitrary cell and will randomly navigate (walk) the grid until it encounters this cell, if at any point it runs into its own path it will backtrack to that collision cell and continue. After it reaches the target it will carve a path (remove walls) from its origin. The cycle then repeats with another arbitrary unvisited cell until all cells are visited.
+
+In the animation you can see that the random walks are colored red and the cells that are a part of the maze are colored white. This algorithm can be incredibly slow especially on larger mazes, but it is interesting to watch.
+
+![wilsons](https://github.com/user-attachments/assets/92792734-2a17-4d71-92d3-ee6c74474a2c)
+
 ### Prim's 
 
+The following algorithm is a little more efficient than the last. It starts with an arbitrary cell and is marked as visited (part of the maze), it will then create a "frontier" by adding the neighboring cells to a separate set (not yet part of the maze). The algorithm then chooses a random cell from the frontier and performs the same steps, expanding the frontier by adding the neighboring cells and repeating until all cells are visited.
+
+In similar fashion, the cells that are a part of the maze are white and the frontier cells are colored red. The result looks akin to an explosion that grows from the starting point.
+
+![prims](https://github.com/user-attachments/assets/501a0d12-3587-4685-a8d2-ee08f04cbcbd)
+
 ### Eller's
+
+This one was more difficult to implement. Eller's algorithm starts at the top and works row by row keeping track of connected sets as it goes. For the first row, every cell belongs to its own set. For each subsequent row it will randomly remove vertical walls between cells if they do not belong to the same set. If a wall is removed, the two sets are merged into one. For that same row it will then randomly remove the bottom wall maintaining that each set has at least one exit downwards. The cells below where the wall was removed will be added to that set and for the next row, cells without a set will become new sets. This will continue with each row until the last, where instead of randomly removing vertical walls it will remove the wall if the cells belong to disjointed sets so that all cells in the final row will be a part of one singular set.
+
+That is a lot to wrap your head around, but in its complexity are some benefits. This is the only algorithm that can generate endless mazes in linear time and even maintain its minimal memory requirements by only needing to keep track of the sets for the previous and current row. Trying to illustrate what is happening here is tricky, however I decided to color cells belonging to new sets red, cells that were an extension of a set pink and cells we no longer need to keep track of white.
+
+![ellers](https://github.com/user-attachments/assets/bb4c651a-6e11-495b-b59f-76ad523666fc)
 
 ## Solution Algorithms
 
