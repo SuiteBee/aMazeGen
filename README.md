@@ -18,20 +18,23 @@ There are a few methods of running this program
 ### User can
 
 + Run an executable file to open the guided text-based interface
-+ Run the program from a command prompt with arguments to bypass the interface (mistakes will print the expected usage)
-+ Perform either of the above from source
++ Run the program from a terminal with arguments to bypass the interface (mistakes will print the expected usage)
++ Compile for non-windows platforms from source with PyInstaller
+
+> [!NOTE]
+> See release notes for details
 
 ## Interface
 
-Once the user has selected the parameters successfully, they are greeted with the TKinter GUI where they can select an animation timestep and click the button to begin
+Once the user has entered the correct parameters, they are greeted with the TKinter GUI where they can select an animation timestep and click the button to begin
 
 ### The order of events are as follows
 
-+ The program will generate the maze at the rate specified with colors to illustrate what is happening and when
-+ The user can at any point change the timestep or pause the animation and continue
-+ The program will halt at this point and wait for the user to trigger the solution
-+ The solution will be animated again with options to change the timestep or pause
-+ Once this step is complete the user can restart the solution or close the program
++ Maze is generated at the timestep specified with colored animations
++ User can change timestep or pause during generation
++ Wait for user input to begin solution
++ User can change timestep or pause during solution
++ User can restart the solution or close the program
 
 ## Generation Algorithms
 
@@ -39,25 +42,60 @@ I chose these based on what I thought looked the most interesting to watch in ac
 
 ### Wilson's
 
-This algorithm generates a maze by selecting an arbitrary cell and marking it visited (part of the maze). It then selects a second arbitrary cell and will randomly navigate (walk) the grid until it encounters this cell, if at any point it runs into its own path it will backtrack to that collision cell and continue. After it reaches the target it will carve a path (remove walls) from its origin. The cycle then repeats with another arbitrary unvisited cell until all cells are visited.
+This algorithm can be incredibly slow especially on larger mazes for the first few iterations, but it is my personal favorite of the methods. It is also one of the few algorithms capable of generating completely unbiased maze.
 
-In the animation you can see that the random walks are colored red and the cells that are a part of the maze are colored white. This algorithm can be incredibly slow especially on larger mazes, but it is interesting to watch.
+Steps
+
+1. Start with a random cell A
+   - Add cell to maze (WHITE)
+2. Choose another random unvisited cell B
+3. Traverse "walk" the maze from cell B until A is reached
+   - Random "steps" on walk are RED
+   - If at any point this path encounters itself (loop), backtrack to this collision cell
+5. Add "walk" path cells to the maze and carve path (remove walls)
+6. Repeat from step 2. until all cells are visited
 
 ![wilsons](https://github.com/user-attachments/assets/92792734-2a17-4d71-92d3-ee6c74474a2c)
 
 ### Prim's 
 
-The following algorithm is a little more efficient than the last. It starts with an arbitrary cell and is marked as visited (part of the maze), it will then create a "frontier" by adding the neighboring cells to a separate set (not yet part of the maze). The algorithm then chooses a random cell from the frontier and performs the same steps, expanding the frontier by adding the neighboring cells and repeating until all cells are visited.
+The following algorithm is a little more efficient than the last. However it results in mazes with many short paths due to its generation technique. It is fun to watch, as it looks like a slow growing explosion from the starting point.
 
-In similar fashion, the cells that are a part of the maze are white and the frontier cells are colored red. The result looks akin to an explosion that grows from the starting point.
+Steps
+
+1. Start with a random cell A
+   - Add cell to maze (WHITE)
+2. Add cells neighboring A to "frontier" (RED)
+3. Choose a random frontier cell B
+   - Add frontier cell to maze
+   - Carve path back to random cell that is part of the maze
+4. Expand frontier from cell B
+5. Rpeat from step 3. until all cells are visited
 
 ![prims](https://github.com/user-attachments/assets/501a0d12-3587-4685-a8d2-ee08f04cbcbd)
 
 ### Eller's
 
-This one was more difficult to implement. Eller's algorithm starts at the top and works row by row keeping track of connected sets as it goes. For the first row, every cell belongs to its own set. For each subsequent row it will randomly remove vertical walls between cells if they do not belong to the same set. If a wall is removed, the two sets are merged into one. For that same row it will then randomly remove the bottom wall maintaining that each set has at least one exit downwards. The cells below where the wall was removed will be added to that set and for the next row, cells without a set will become new sets. This will continue with each row until the last, where instead of randomly removing vertical walls it will remove the wall if the cells belong to disjointed sets so that all cells in the final row will be a part of one singular set.
+This is the most complex of the generation methods, but in its complexity are some benefits. This is the only algorithm that can generate endless mazes in linear time and even maintain its minimal memory requirements by only needing to keep track of the sets for the current and previous row.
 
-That is a lot to wrap your head around, but in its complexity are some benefits. This is the only algorithm that can generate endless mazes in linear time and even maintain its minimal memory requirements by only needing to keep track of the sets for the previous and current row. Trying to illustrate what is happening here is tricky, however I decided to color cells belonging to new sets red, cells that were an extension of a set pink and cells that are processed and completed white.
+Steps
+
+1. Add each cell in the first row to its own set (RED)
+2. Moving from left to right
+   - Randomly remove vertical (right) walls of cells not a part of the same set
+   - If a wall was removed, join the sets of cells on the left and right (WHITE)
+3. Moving from left to right
+   - Randomly remove horizontal (bottom) walls
+   - If a cell is the only member of its set, remove the bottom wall
+   - If a cell is the only member of its set with a bottom wall, remove this wall
+   - If a wall was removed, join the cell below to the set above (PINK)
+4. Move to the next row and add each cell not a part of an existing set to its own new set
+5. Repeat from step 2 until the last row
+6. Moving from left to right
+   - Remove vertical (right) walls separating cells of different sets
+   - If a wall was removed, join the sets of cells on the left and right
+   - All cells in the bottom row should be a part of the same set
+
 
 ![ellers](https://github.com/user-attachments/assets/bb4c651a-6e11-495b-b59f-76ad523666fc)
 
