@@ -3,9 +3,11 @@
 > [!TIP]
 > Scroll to the bottom for GIFS
  
-A maze generator covering multiple algorithms for both generation and solution that employs TKinter to visualize them 
+A perfect maze generator with the purpose of illustrating a few of the algorithms for both generating and solving them
 
-The primary goal of this project was to learn Python. To do this I decided to work with mazes and come up with a creative way to compare the methods of solving them
+The definition of a perfect maze is one in which any two cells will have only one path between them 
+
+The primary goal of this project was to learn Python. Mazes have always fascinated me so to accomplish this task I decided to create this project
 
 # Features
 
@@ -18,24 +20,6 @@ There are a few methods of running this program
 + Run an executable file to open the guided text-based interface
 + Run the program from a command prompt with arguments to bypass the interface (mistakes will print the expected usage)
 + Perform either of the above from source
-
-<details>
-<summary><h3>Screenshots</h3></summary>
-
-# Shell Interface
-
-![Screenshot 2025-04-30 024910](https://github.com/user-attachments/assets/54901477-e6ed-47f9-ab4e-d1f588e1d3b6)
-
-# Command line arguments
-
-![Screenshot 2025-04-30 024851](https://github.com/user-attachments/assets/bd050271-4066-42fb-aa0a-6b11cd30036c)
-
-# Asking for help
-
-![Screenshot 2025-04-30 025255](https://github.com/user-attachments/assets/ce09b737-fda4-4d78-8d87-f668302aeba6)
-
-</details>
-
 
 ## Interface
 
