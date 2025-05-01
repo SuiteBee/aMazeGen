@@ -1,17 +1,20 @@
-# aMazeGen
-
 > [!TIP]
 > Scroll to the bottom for GIFS
- 
+
+# aMazeGen
+
 A perfect maze generator with the purpose of illustrating a few of the algorithms for both generating and solving them
 
-The definition of a perfect maze is one in which any two cells will have only one path between them 
+```The definition of a perfect maze is one in which all cells are reachable and any two cells will have only one path between them```
 
 The primary goal of this project was to learn Python. Mazes have always fascinated me so to accomplish this task I decided to create this project
 
 # Features
 
 ## Execution
+
+> [!NOTE]
+> See release notes for details
 
 There are a few methods of running this program
 
@@ -20,9 +23,6 @@ There are a few methods of running this program
 + Run an executable file to open the guided text-based interface
 + Run the program from a terminal with arguments to bypass the interface (mistakes will print the expected usage)
 + Compile for non-windows platforms from source with PyInstaller
-
-> [!NOTE]
-> See release notes for details
 
 ## Interface
 
@@ -46,10 +46,10 @@ This algorithm can be incredibly slow especially on larger mazes for the first f
 
 Steps
 
-1. Start with a random cell A
+1. Start with a random cell
    - Add cell to maze (WHITE)
-2. Choose another random unvisited cell B
-3. Traverse "walk" the maze from cell B until A is reached (RED)
+2. Choose another random unvisited cell A
+3. Traverse "walk" the maze from cell A until a cell that is part of the maze is reached (RED)
    - If at any point this path encounters itself (loop), backtrack to this collision cell
 5. Add "walk" path cells to the maze (WHITE) and remove walls between cells
 6. Repeat from step 2. until all cells are visited
