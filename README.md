@@ -49,10 +49,9 @@ Steps
 1. Start with a random cell A
    - Add cell to maze (WHITE)
 2. Choose another random unvisited cell B
-3. Traverse "walk" the maze from cell B until A is reached
-   - Random "steps" on walk are RED
+3. Traverse "walk" the maze from cell B until A is reached (RED)
    - If at any point this path encounters itself (loop), backtrack to this collision cell
-5. Add "walk" path cells to the maze and carve path (remove walls)
+5. Add "walk" path cells to the maze (WHITE) and remove walls between cells
 6. Repeat from step 2. until all cells are visited
 
 ![wilsons](https://github.com/user-attachments/assets/92792734-2a17-4d71-92d3-ee6c74474a2c)
@@ -67,9 +66,9 @@ Steps
    - Add cell to maze (WHITE)
 2. Add cells neighboring A to "frontier" (RED)
 3. Choose a random frontier cell B
-   - Add frontier cell to maze
+   - Add frontier cell to maze (WHITE)
    - Carve path back to random cell that is part of the maze
-4. Expand frontier from cell B
+4. Expand frontier from cell B (RED)
 5. Rpeat from step 3. until all cells are visited
 
 ![prims](https://github.com/user-attachments/assets/501a0d12-3587-4685-a8d2-ee08f04cbcbd)
@@ -93,9 +92,8 @@ Steps
 5. Repeat from step 2 until the last row
 6. Moving from left to right
    - Remove vertical (right) walls separating cells of different sets
-   - If a wall was removed, join the sets of cells on the left and right
+   - If a wall was removed, join the sets of cells on the left and right (WHITE)
    - All cells in the bottom row should be a part of the same set
-
 
 ![ellers](https://github.com/user-attachments/assets/bb4c651a-6e11-495b-b59f-76ad523666fc)
 
@@ -105,25 +103,47 @@ I selected these particular solutions because the third algorithm is a nice comb
 
 ### Depth First Search
 
-This algorithm operates in an unweighted graph by traversing as far as it can go by choosing random directions when encountering an intersection. When it gets stuck in a dead end, the algorithm will backtrack and continue at the last intersection with an unvisited neighbor. The travel path here is colored red and cells that were visited, then backtracked will be colored pink
+This algorithm is totally random and as such can end up exploring most of the maze before finding the exit or get lucky and go straight to the end. As such, each run on the same maze will result differently.
+
+Steps
+
+1. Visit a random unvisited neighbor (RED)
+2. If all neighbors are visited, backtrack until one is unvisited (PINK)
+3. Repeat from step 1 until exit is reached
 
 ![depth_first](https://github.com/user-attachments/assets/91e12dde-3538-4154-92c2-4343979c6410)
 
 ### Breadth First Search
 
-BFS operates much like Prim's in that it will expand from a starting point. This algorithm will expand in every direction that contains an unvisited cell until an exit is reached. For this animation I colored the visited cells pink and the "heads" of the travel paths red.
+BFS operates much like Prim's, but for solving the maze instead. This algorithm expands in every direction, with each iteration one step further from the start. Each run of this method on the same maze will be identical.
+
+Steps
+
+1. Visit each unvisited neighbor (RED)
+2. From each now visisted neighbor (PINK) repeat step 1
+3. Continue until exit is reached
 
 ![breadth_first](https://github.com/user-attachments/assets/e1fc12a4-9446-4ce4-951e-4b9f7b0d5295)
 
 ### Best First Search
 
-The final solution algorithm operates a little like both of the previous methods. It has a singular travel path like DFS, but can branch off in another direction like BFS. The determination of where it branches off is a heuristic based on cell distance from the exit. This algorithm starts by calculating the distance mentioned before of the current cells neighbors, then choosing the closest cell. It will do this in a continuous path until one of the previous encountered neighbors is closer than the current cells neighbors. It will then branch off and continue from that cell and repeat until the exit is reached. The current cell is colored red, the measured neighboring cells are colored yellow and visited cells are marked pink.
+The final solution algorithm operates a little like both of the previous methods. It has a singular travel path like DFS, but can branch off in another direction like BFS. The determination of where it branches off is a heuristic based on cell distance from the exit.
+
+Steps
+
+1. Measure the distance from each neighboring cell in path to the exit
+   - Measured cells were checked, but not visited are YELLOW
+3. Visit the closest (to exit) unvisited neighbor (RED)
+   - Previously visited path cells are PINK
+5. Repeat from step 1 until exit is reached
 
 ![best_first](https://github.com/user-attachments/assets/a07c0948-c9a7-4c6c-9019-9a6e5ed014ea)
 
 # Scale
 
-This program can handle mazes of many sizes if the processing power is available, I decided to cap the width/height at a maximum of 500 with a minimum of 3. The program will lag a bit during startup at higher bounds due to the increased initialization that has to occur. I also setup the GUI so that it will scale the UI and cells to fit in a window that is 70% of the screen size its running on.
+This program can handle mazes of many sizes if the processing power is available, I decided to cap the width/height at a maximum of 500 with a minimum of 3. The program will lag a bit during startup at higher bounds due to the increased initialization that has to occur. 
+
+I also setup the GUI so that it will scale the UI + cells to fit in a window that is 70% of the screen size its running on.
 
 ![large_prims](https://github.com/user-attachments/assets/fe8c0932-d10c-4184-bc1b-6338ff187390)
 
@@ -135,11 +155,10 @@ The app will also handle asymmetric sizes and take into account the aspect of th
 
 ![tall](https://github.com/user-attachments/assets/f3b26872-1acd-49df-b87a-175b307a9caf)
 
-
 # Review
 
 Working with Python was a pleasant experience. I appreciated the simplicity of the syntax and the speed at which I could go from writing code to running my program. There was not a lot of setup involved. Packaging the app was also very streamlined and took next to no input from myself with PyInstaller. There seems to be limitless numbers of libraries and extensions available as well. You can choose which constructs if any you want to include from more robust languages like abstract classes or enums.
 
-I started out planning to use MatPlotLib for the GUI and animation and got so far as to be running the animations with it. However it turned out to be much too slow due to how MPL manages its drawn plots and updates the changes. It would get exponentially slower around a grid size of 15x15. I tried many methods to get around it or speed MPL up to no avail. I ended up scrapping that code and rewriting the GUI with TKinter, which in hindsight was much more appropriate for this task. Now I can get up to a grid size of 500x500 with little to no slowdown.
+I started out planning to use MatPlotLib for the GUI and animation and got so far as to be running the animations with it. However it turned out to be much too slow due to how MPL manages its drawn plots and has to update every drawn object on every frame. It would get exponentially slower above a grid size of 15x15. I tried many methods to get around it or speed MPL up to no avail. I ended up scrapping that code and rewriting the GUI with TKinter, which in hindsight was much more appropriate for this task. Now I can get up to a grid size of 500x500 with little to no slowdown in animation at least.
 
-The algorithms were all fun to implement and see executed in real time. Eller's was easily the most challenging. There is not a lot of documentation anywhere regarding how the algorithm works and its a difficult method to wrap your head around. This was part of the reason I chose it, but it did take some effort to get through.
+The algorithms were all fun to implement and see executed in real time. Eller's was easily the most challenging. There is not a lot of documentation anywhere regarding how the algorithm works and its a difficult method to wrap your head around in general. This was part of the reason I chose it, but it did take some effort to get through.
